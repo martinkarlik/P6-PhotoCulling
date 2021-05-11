@@ -72,22 +72,24 @@ const StyledVertClusterSection = styled.section`
     position: absolute;
     bottom: 0%;
     background: rgba(0, 0, 0, 0.6); /* Black see-through */
-    width: 1%;
+    min-width: 1%;
+    max-width: 100%;
     height: 1%;
     color: white;
     font-size: 20px;
-    padding: 0em 1em 1.5em 0.4em;
+    padding: 0em 0.4em 1.5em 0.4em;
     text-align: left;
   }
   .bigOverlay {
     position: absolute;
     bottom: 0%;
     background: rgba(0, 0, 0, 0.6); /* Black see-through */
-    width: 1%;
+    min-width: 1%;
+    max-width: 100%;
     height: 1%;
     color: white;
     font-size: 20px;
-    padding: 0em 1em 1.5em 0.4em;
+    padding: 0em 0.4em 1.5em 0.4em;
     text-align: left;
   }
 `;
