@@ -33,17 +33,16 @@ Possible improvements:
 import datetime as dt
 import numpy as np
 from tqdm import tqdm
+import functools
 
 FORMAT = "%Y:%m:%d %H:%M:%S"
-DISTANCE_THRESHOLD = (0, 5)  # days, seconds
+DISTANCE_THRESHOLD = (0, 60)  # days, seconds
 
 
 class ClusteringEngine:
 
     def __init__(self, data):
         self.data = data
-        self.clusters = None
-        
 
     def _get_distance(self, timestamp_a, timestamp_b):
 
@@ -115,21 +114,42 @@ class ClusteringEngine:
             if not is_timestamp_sorted:
                 clusters[len(clusters)] = [timestamp]
 
-        self.clusters = clusters
+        cluster_vector = np.zeros(len(self.data))
 
-    def get_clusters(self):
-        return self.clusters
+        for key in tqdm(clusters):
+
+            for timestamp in clusters[key]:
+                cluster_vector[np.where(self.data == timestamp)] = key
+
+        return cluster_vector.tolist()
+
+    def cluster_chronologically_sorted(self):
+
+        def comparator(a, b):
+            result = -1 if self._is_predecessor(a, b) else 1
+            return result
+
+        sorted_data = sorted(self.data, key=functools.cmp_to_key(comparator))
+        cluster_vector = np.zeros(len(self.data))
+
+        cluster_index = 0
+        for i in tqdm(range(len(sorted_data) - 1)):
+
+            indices = [ii for ii in range(len(self.data)) if self.data[ii] == sorted_data[i]]
+            for ii in indices:
+                cluster_vector[ii] = cluster_index
+
+            if not self._in_proximity(sorted_data[i], sorted_data[i + 1]):
+                cluster_index += 1
+
+        print(cluster_vector)
+
+        return cluster_vector.tolist()
+
 
     def get_cluster_vector(self):
         if self.clusters is None:
             return
 
-        cluster_vector = np.zeros(len(self.data))
 
-        for key in tqdm(self.clusters):
-
-            for timestamp in self.clusters[key]:
-                cluster_vector[np.where(self.data == timestamp)] = key
-
-        return cluster_vector.tolist()
 

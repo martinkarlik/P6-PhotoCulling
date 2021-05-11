@@ -233,8 +233,7 @@ def prepare_dataframe_pciaa_clusters(image_dataset_approved_path, image_dataset_
         data['approved'].append(0.0)
 
     engine = ClusteringEngine(data['timestamp'])
-    engine.cluster_chronologically()
-    cluster_vector = engine.get_cluster_vector()
+    cluster_vector = engine.cluster_chronologically_sorted()
 
     clustered_data = data
     clustered_data['cluster'] = cluster_vector
@@ -244,7 +243,10 @@ def prepare_dataframe_pciaa_clusters(image_dataset_approved_path, image_dataset_
 
 if __name__ == "__main__":
 
-    dataframe = prepare_dataframe_pciaa_clusters(HORSES_DATASET_APPROVED_PATH, HORSES_DATASET_REJECTED_PATH)
+    # dataframe = prepare_dataframe_pciaa_clusters(HORSES_DATASET_APPROVED_PATH, HORSES_DATASET_REJECTED_PATH)
+
+    dataframe = pd.read_csv(HORSES_DATAFRAME_CLUSTERS)
+    dataframe = dataframe.sort_values('cluster')
     dataframe.to_csv(HORSES_DATAFRAME_CLUSTERS)
 
 
