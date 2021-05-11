@@ -72,41 +72,13 @@ if __name__ == "__main__":
     )
 
     distortion_generators = [
-        ImageDataGenerator(
-            rescale=1.0 / 255,
-            validation_split=0.2,
-            brightness_range=[0.2, 0.75]
-        ),
-        ImageDataGenerator(
-            rescale=1.0 / 255,
-            validation_split=0.2,
-            brightness_range=[1.5, 5.0]
-        ),
-        ImageDataGenerator(
-            rescale=1.0 / 255,
-            validation_split=0.2,
-            rotation_range=90.0
-        ),
-        ImageDataGenerator(
-            rescale=1.0 / 255,
-            validation_split=0.2,
-            shear_range=90.0
-        ),
-        ImageDataGenerator(
-            rescale=1.0 / 255,
-            validation_split=0.2,
-            zoom_range=0.5
-        ),
-        ImageDataGenerator(
-            rescale=1.0 / 255,
-            validation_split=0.2,
-            preprocessing_function=SiameseGeneratorDistortions.apply_blur
-        ),
-        ImageDataGenerator(
-            rescale=1.0 / 255,
-            validation_split=0.2,
-            preprocessing_function=SiameseGeneratorDistortions.apply_blob
-        )
+        ImageDataGenerator(rescale=1.0 / 255, validation_split=0.2, brightness_range=[0.2, 0.75]),
+        ImageDataGenerator(rescale=1.0 / 255, validation_split=0.2, brightness_range=[1.5, 5.0]),
+        ImageDataGenerator(rescale=1.0 / 255, validation_split=0.2, rotation_range=90.0),
+        ImageDataGenerator(rescale=1.0 / 255, validation_split=0.2, shear_range=90.0),
+        ImageDataGenerator(rescale=1.0 / 255, validation_split=0.2, zoom_range=0.5),
+        ImageDataGenerator(rescale=1.0 / 255, validation_split=0.2, preprocessing_function=SiameseGeneratorDistortions.apply_blur),
+        ImageDataGenerator(rescale=1.0 / 255, validation_split=0.2, preprocessing_function=SiameseGeneratorDistortions.apply_blob)
     ]
 
     train_generator = SiameseGeneratorDistortions(

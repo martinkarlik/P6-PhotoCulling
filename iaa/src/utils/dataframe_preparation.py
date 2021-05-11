@@ -8,6 +8,8 @@ import os
 import pandas as pd
 from tqdm import tqdm
 import random
+from PIL import Image
+from iaa.src.utils.clustering import ClusteringEngine
 
 AVA_TEXT_PATH = "../../datasets/ava/AVA.txt"
 
@@ -26,6 +28,12 @@ AVA_DATAFRAME_GCIAA_CAT_SUBSET_PATH = "../../datasets/ava/gciaa/AVA_gciaa-cat_su
 AVA_DATAFRAME_GCIAA_DIST_TRAIN_PATH = "../../datasets/ava/gciaa/AVA_gciaa-dist_train_dataframe.csv"
 AVA_DATAFRAME_GCIAA_DIST_TEST_PATH = "../../datasets/ava/gciaa/AVA_gciaa-dist_test_dataframe.csv"
 AVA_DATAFRAME_GCIAA_DIST_SUBSET_PATH = "../../datasets/ava/gciaa/AVA_gciaa-dist_subset_dataframe.csv"
+
+HORSES_DATASET_APPROVED_PATH = "../../datasets/horses/approved/"
+HORSES_DATASET_REJECTED_PATH = "../../datasets/horses/rejected/"
+
+HORSES_DATAFRAME_CLUSTERS = "../../datasets/horses/horses_pciaa_clusters_dataframe.csv"
+HORSES_DATAFRAME_PAIRS = "../../datasets/horses/horses_pciaa_pairs_dataframe.csv"
 
 
 SELECTED_CATEGORIES_FOR_PAIRWISE_TRAINING = (19, 20, 43, 57, 21, 50, 2, 4, 38, 14, 15, 47, 7, 42, 26)
@@ -202,6 +210,53 @@ def prepare_dataframe_gciaa_dist(
     return pd.DataFrame(data)
 
 
+def prepare_dataframe_pciaa_clusters(image_dataset_approved_path, image_dataset_rejected_path):
+
+    data = {
+        'id': [],
+        'timestamp': [],
+        'approved': []
+    }
+
+    for filename in tqdm(os.listdir(image_dataset_approved_path)):
+        timestamp = Image.open(os.path.join(image_dataset_approved_path, filename)).getexif()[36867]
+
+        data['id'].append(filename)
+        data['timestamp'].append(timestamp)
+        data['approved'].append(1.0)
+
+    for filename in tqdm(os.listdir(image_dataset_rejected_path)):
+        timestamp = Image.open(os.path.join(image_dataset_rejected_path, filename)).getexif()[36867]
+
+        data['id'].append(filename)
+        data['timestamp'].append(timestamp)
+        data['approved'].append(0.0)
+
+    engine = ClusteringEngine(data['timestamp'])
+    engine.cluster_chronologically()
+    cluster_vector = engine.get_cluster_vector()
+
+    clustered_data = data
+    clustered_data['cluster'] = cluster_vector
+
+    return pd.DataFrame(clustered_data)
+
+
 if __name__ == "__main__":
-    dataframe = prepare_dataframe_gciaa_cat(AVA_DATASET_TEST_PATH, AVA_TEXT_PATH)
-    dataframe.to_csv(AVA_DATAFRAME_GCIAA_CAT_TEST_PATH)
+
+    dataframe = prepare_dataframe_pciaa_clusters(HORSES_DATASET_APPROVED_PATH, HORSES_DATASET_REJECTED_PATH)
+    dataframe.to_csv(HORSES_DATAFRAME_CLUSTERS)
+
+
+
+
+
+
+"""
+LOOK HERE!
+
+If it says "Processed finished with exit code 0." then good, take my PC home please.
+If it says "Something fucked up." then not good, but also take my PC home please.
+If it's not done yet, then just close down my PC and take it home, but take it out please so that it doesn't melt down.
+Basically just take my PC home please and thank you.
+"""

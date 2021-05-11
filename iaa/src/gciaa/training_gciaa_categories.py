@@ -71,13 +71,13 @@ if __name__ == "__main__":
         validation_split=0.2
     )
 
-    train_generator = SiameseGeneratorCat(
+    train_generator = SiameseGeneratorCategories(
         generator=data_generator,
         dataframe=dataframe,
         batch_size=BATCH_SIZE,
         subset='training')
 
-    validation_generator = SiameseGeneratorCat(
+    validation_generator = SiameseGeneratorCategories(
         generator=data_generator,
         dataframe=dataframe,
         batch_size=BATCH_SIZE,
