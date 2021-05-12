@@ -235,30 +235,51 @@ def prepare_dataframe_pciaa_clusters(image_dataset_approved_path, image_dataset_
     engine = ClusteringEngine(data['timestamp'])
     cluster_vector = engine.cluster_chronologically_sorted()
 
-    clustered_data = data
-    clustered_data['cluster'] = cluster_vector
+    clustered_data = {
+        'id': data['id'],
+        'cluster': cluster_vector,
+        'approved': data['approved']
+    }
 
     return pd.DataFrame(clustered_data)
 
 
+def prepare_dataframe_pciaa_pairs(cluster_dataframe_path):
+
+    cluster_dataframe = pd.read_csv(cluster_dataframe_path)
+
+    generated_pairs = {
+        'id_a': [],
+        'id_b': [],
+        'label': []
+    }
+
+    num_clusters = cluster_dataframe["cluster"].max()
+    for i in tqdm(range(0, int(num_clusters))):
+        current_cluster_dataframe = cluster_dataframe.loc[cluster_dataframe['cluster'] == i]
+
+        approved_filenames = current_cluster_dataframe.loc[current_cluster_dataframe['approved'] == 1.0]['id'].values
+        rejected_filenames = current_cluster_dataframe.loc[current_cluster_dataframe['approved'] == 0.0]['id'].values
+
+        if len(approved_filenames) != 0 and len(rejected_filenames) != 0:
+
+            for approved_filename in approved_filenames:
+                for rejected_filename in rejected_filenames:
+
+                    if random.random() < 0.5:
+                        generated_pairs['id_a'].append(os.path.join(HORSES_DATASET_APPROVED_PATH, approved_filename))
+                        generated_pairs['id_b'].append(os.path.join(HORSES_DATASET_REJECTED_PATH, rejected_filename))
+                        generated_pairs['label'].append(0.0)
+                    else:
+                        generated_pairs['id_a'].append(os.path.join(HORSES_DATASET_REJECTED_PATH, rejected_filename))
+                        generated_pairs['id_b'].append(os.path.join(HORSES_DATASET_APPROVED_PATH, approved_filename))
+                        generated_pairs['label'].append(1.0)
+
+    return pd.DataFrame(generated_pairs)
+
+
 if __name__ == "__main__":
 
-    # dataframe = prepare_dataframe_pciaa_clusters(HORSES_DATASET_APPROVED_PATH, HORSES_DATASET_REJECTED_PATH)
+    dataframe = prepare_dataframe_pciaa_pairs(HORSES_DATAFRAME_CLUSTERS)
+    dataframe.to_csv(HORSES_DATAFRAME_PAIRS)
 
-    dataframe = pd.read_csv(HORSES_DATAFRAME_CLUSTERS)
-    dataframe = dataframe.sort_values('cluster')
-    dataframe.to_csv(HORSES_DATAFRAME_CLUSTERS)
-
-
-
-
-
-
-"""
-LOOK HERE!
-
-If it says "Processed finished with exit code 0." then good, take my PC home please.
-If it says "Something fucked up." then not good, but also take my PC home please.
-If it's not done yet, then just close down my PC and take it home, but take it out please so that it doesn't melt down.
-Basically just take my PC home please and thank you.
-"""
