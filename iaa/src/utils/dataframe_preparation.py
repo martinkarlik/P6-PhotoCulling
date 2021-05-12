@@ -191,7 +191,6 @@ def prepare_dataframe_gciaa_cat(
 
 def prepare_dataframe_gciaa_dist(
         image_dataset_path,
-        image_info_path,
         pairs_per_dataset_scalar=0.25):
 
     data = {
@@ -280,6 +279,9 @@ def prepare_dataframe_pciaa_pairs(cluster_dataframe_path):
 
 if __name__ == "__main__":
 
-    dataframe = prepare_dataframe_pciaa_pairs(HORSES_DATAFRAME_CLUSTERS)
-    dataframe.to_csv(HORSES_DATAFRAME_PAIRS)
+    # dataframe = prepare_dataframe_pciaa_pairs(HORSES_DATAFRAME_CLUSTERS)
+    # dataframe.to_csv(HORSES_DATAFRAME_PAIRS)
+
+    dataframe = prepare_dataframe_gciaa_dist(AVA_DATASET_TEST_PATH)
+    dataframe.to_csv(AVA_DATAFRAME_GCIAA_DIST_TEST_PATH)
 
