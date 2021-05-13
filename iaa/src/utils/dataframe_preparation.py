@@ -6,6 +6,7 @@ a dataframe of two columns: image filename (for data generator to access it dyna
 
 import os
 import pandas as pd
+import numpy as np
 from tqdm import tqdm
 import random
 from PIL import Image
@@ -32,8 +33,10 @@ AVA_DATAFRAME_GCIAA_DIST_SUBSET_PATH = "../../datasets/ava/gciaa/AVA_gciaa-dist_
 HORSES_DATASET_APPROVED_PATH = "../../datasets/horses/approved/"
 HORSES_DATASET_REJECTED_PATH = "../../datasets/horses/rejected/"
 
-HORSES_DATAFRAME_CLUSTERS = "../../datasets/horses/horses_pciaa_clusters_dataframe.csv"
-HORSES_DATAFRAME_PAIRS = "../../datasets/horses/horses_pciaa_pairs_dataframe.csv"
+HORSES_DATAFRAME_CLUSTERS_PATH = "../../datasets/horses/horses_pciaa_clusters_dataframe.csv"
+HORSES_DATAFRAME_PAIRS_PATH = "../../datasets/horses/horses_pciaa_pairs_dataframe.csv"
+HORSES_DATAFRAME_PCIAA_TRAIN_PATH = "../../datasets/horses/horses_pciaa_train_dataframe.csv"
+HORSES_DATAFRAME_PCIAA_TEST_PATH = "../../datasets/horses/horses_pciaa_test_dataframe.csv"
 
 
 SELECTED_CATEGORIES_FOR_PAIRWISE_TRAINING = (19, 20, 43, 57, 21, 50, 2, 4, 38, 14, 15, 47, 7, 42, 26)
@@ -277,11 +280,20 @@ def prepare_dataframe_pciaa_pairs(cluster_dataframe_path):
     return pd.DataFrame(generated_pairs)
 
 
+def split_dataframe_test_train(pairs_dataframe_path, test_split=0.4):
+    pairs_dataframe = pd.read_csv(pairs_dataframe_path, index_col=0)
+
+    np.random.seed(SEED)
+    mask = np.random.rand(len(pairs_dataframe)) < test_split
+
+    train_split = pairs_dataframe[~mask]
+    test_split = pairs_dataframe[mask]
+
+    return train_split, test_split
+
+
 if __name__ == "__main__":
-
-    # dataframe = prepare_dataframe_pciaa_pairs(HORSES_DATAFRAME_CLUSTERS)
-    # dataframe.to_csv(HORSES_DATAFRAME_PAIRS)
-
-    dataframe = prepare_dataframe_gciaa_dist(AVA_DATASET_TEST_PATH)
-    dataframe.to_csv(AVA_DATAFRAME_GCIAA_DIST_TEST_PATH)
+    dataframe_train, dataframe_test = split_dataframe_test_train(HORSES_DATAFRAME_PAIRS_PATH)
+    dataframe_train.to_csv(HORSES_DATAFRAME_PCIAA_TRAIN_PATH)
+    dataframe_test.to_csv(HORSES_DATAFRAME_PCIAA_TEST_PATH)
 
