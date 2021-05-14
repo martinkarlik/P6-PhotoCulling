@@ -9,7 +9,7 @@ import cv2
 import os
 import random
 from scipy.stats import wasserstein_distance
-from iaa.src.giiaa._nima import *
+from iaa.src.giiaa.base_module_giiaa import *
 import tensorflow.keras as keras
 
 

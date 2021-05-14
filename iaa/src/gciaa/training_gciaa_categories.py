@@ -2,8 +2,8 @@
 Training script for distribution-based GCIAA.
 """
 
-from iaa.src.gciaa._base import *
-from iaa.src.gciaa._generator import *
+from iaa.src.gciaa.base_module_gciaa import *
+from iaa.src.utils.generators import *
 
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
@@ -14,10 +14,7 @@ import os
 FULL_DATASET_TRAINING = True
 
 
-AVA_DATASET_PATH = "../../datasets/ava/train"
 AVA_DATAFRAME_PATH = "../../datasets/ava/gciaa/AVA_gciaa-cat_train_dataframe.csv"
-
-AVA_DATASET_SUBSET_PATH = "../../datasets/ava/subset/"
 AVA_DATAFRAME_SUBSET_PATH = "../../datasets/ava/gciaa/AVA_gciaa-cat_subset_dataframe.csv"
 
 GIIAA_MODEL = "../../models/giiaa/model_giiaa-hist_200k_inceptionresnetv2_0.078.hdf5"
@@ -35,11 +32,9 @@ EPOCHS = 5
 
 if __name__ == "__main__":
     if FULL_DATASET_TRAINING:
-        dataset_path = AVA_DATASET_PATH
         dataframe_path = AVA_DATAFRAME_PATH
         model_name_tag = 'model_gciaa-cat_all_'
     else:
-        dataset_path = AVA_DATASET_SUBSET_PATH
         dataframe_path = AVA_DATAFRAME_SUBSET_PATH
         model_name_tag = 'model_gciaa-cat_'
 

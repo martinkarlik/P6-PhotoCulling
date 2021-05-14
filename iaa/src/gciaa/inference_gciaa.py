@@ -8,8 +8,8 @@ from tqdm import tqdm
 import cv2
 import os
 import random
-from iaa.src.gciaa._base import *
-from iaa.src.giiaa._nima import *
+from iaa.src.gciaa.base_module_gciaa import *
+from iaa.src.giiaa.base_module_giiaa import *
 import tensorflow.keras as keras
 
 
@@ -43,14 +43,14 @@ if __name__ == "__main__":
     for i in range(20):
 
         random_file = os.path.join(AVA_DATASET_SUBSET_PATH, random.choice(os.listdir(AVA_DATASET_SUBSET_PATH)))
-        image = cv2.resize(cv2.imread(random_file), (224, 224)) / 255.0
-        image_a = np.asarray(image)[np.newaxis, ...]
-        gt_a = dataframe[dataframe["id"] == random_file.split('/')[-1]].iloc[0]['label']
+        image_a = cv2.resize(cv2.imread(random_file), (224, 224)) / 255.0
+        image_a = np.asarray(image_a)[np.newaxis, ...]
+        gt_a = dataframe[dataframe['id'] == random_file.split('/')[-1]].iloc[0]['label']
 
         random_file = os.path.join(AVA_DATASET_SUBSET_PATH, random.choice(os.listdir(AVA_DATASET_SUBSET_PATH)))
-        image = cv2.resize(cv2.imread(random_file), (224, 224)) / 255.0
-        image_b = np.asarray(image)[np.newaxis, ...]
-        gt_b = dataframe[dataframe["id"] == random_file.split('/')[-1]].iloc[0]['label']
+        image_b = cv2.resize(cv2.imread(random_file), (224, 224)) / 255 * 0.01
+        image_b = np.asarray(image_b)[np.newaxis, ...]
+        gt_b = dataframe[dataframe['id'] == random_file.split('/')[-1]].iloc[0]['label']
 
         giiaa_prediction_a = get_mean(giiaa.predict(image_a)[0])
         giiaa_prediction_b = get_mean(giiaa.predict(image_b)[0])

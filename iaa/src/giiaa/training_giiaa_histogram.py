@@ -2,7 +2,7 @@
 Training script for distribution-based GIIAA.
 """
 
-from iaa.src.giiaa._nima import *
+from iaa.src.giiaa.base_module_giiaa import *
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 from tensorflow.keras import backend as K
