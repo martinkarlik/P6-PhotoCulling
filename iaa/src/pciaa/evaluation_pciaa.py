@@ -17,7 +17,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 GIIAA_MODEL = "../../models/giiaa_metadata/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
 PCIAA_HORSES_MODEL = ""
 
-HORSES_DATAFRAME_TEST_PATH = "../../data/horses/pciaa_metadata/horses_pciaa_test_dataframe.csv"
+HORSES_DATAFRAME_TEST_PATH = "../../data/horses/pciaa_metadata/dataframe_horses_pciaa_test.csv"
 
 BASE_MODEL_NAME = "InceptionResNetV2"
 BATCH_SIZE = 64

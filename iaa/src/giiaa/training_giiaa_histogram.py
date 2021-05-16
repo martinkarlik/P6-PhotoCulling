@@ -11,7 +11,7 @@ import os
 
 
 AVA_DATASET_PATH = "../../data/ava/dataset/train"
-AVA_DATAFRAME_PATH = "../../data/ava/giiaa_metadata/AVA_giiaa-hist_train_dataframe.csv"
+AVA_DATAFRAME_PATH = "../../data/ava/giiaa_metadata/dataframe_AVA_giiaa-hist_train.csv"
 
 LOG_PATH = "../../data/ava/giiaa_metadata/giiaa-hist_logs"
 MODELS_PATH = "../../models/giiaa/"

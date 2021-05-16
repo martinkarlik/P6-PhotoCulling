@@ -18,7 +18,7 @@ GIIAA_MODEL = "../../models/giiaa_metadata/giiaa-hist_200k_base-inceptionresnetv
 GCIAA_CATEGORIES_MODEL = ""  # Should be the saved GCIAA weights
 
 AVA_DATASET_TEST_PATH = "../../data/ava/dataset/test/"
-AVA_DATAFRAME_TEST_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-cat_test_dataframe.csv"
+AVA_DATAFRAME_TEST_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-cat_test.csv"
 
 BASE_MODEL_NAME = "InceptionResNetV2"
 BATCH_SIZE = 64

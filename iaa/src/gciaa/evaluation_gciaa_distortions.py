@@ -49,7 +49,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 GIIAA_MODEL = "../../models/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
 GCIAA_DISTORTIONS_MODEL = "../../models/gciaa-dist_51k_base-giiaa_accuracy-0.865.hdf5"
 
-AVA_DATAFRAME_TEST_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-dist_test_dataframe.csv"
+AVA_DATAFRAME_TEST_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-dist_test.csv"
 
 
 DISTORTION_GENERATORS = [

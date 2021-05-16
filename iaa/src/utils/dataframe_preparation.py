@@ -17,27 +17,26 @@ AVA_TEXT_PATH = "../../data/ava/AVA.txt"
 AVA_DATASET_TRAIN_PATH = "../../data/ava/dataset/train"
 AVA_DATASET_TEST_PATH = "../../data/ava/dataset/test"
 
+HORSES_DATASET_APPROVED_PATH = "../../data/horses/dataset/approved/"
+HORSES_DATASET_REJECTED_PATH = "../../data/horses/dataset/rejected/"
+
 SELECTED_CATEGORIES_FOR_GCIAA_CAT_TRAINING = (19, 20, 43, 57, 21, 50, 2, 4, 38, 14, 15, 47, 7, 42, 26)
 RANDOM_SEED = 31
 
 
-GIIAA_HIST_TRAIN_DATAFRAME_PATH = "../../data/ava/giiaa_metadata/AVA_giiaa-hist_train_dataframe.csv"
-GIIAA_HIST_TEST_DATAFRAME_PATH = "../../data/ava/giiaa_metadata/AVA_giiaa-hist_test_dataframe.csv"
+DATAFRAME_AVA_GIIAA_HIST_TRAIN_PATH = "../../data/ava/giiaa_metadata/dataframe_AVA_giiaa-hist_train.csv"
+DATAFRAME_AVA_GIIAA_HIST_TEST_PATH = "../../data/ava/giiaa_metadata/dataframe_AVA_giiaa-hist_test.csv"
 
-GCIAA_CAT_TRAIN_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-cat_train_dataframe.csv"
-GCIAA_CAT_TEST_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-cat_test_dataframe.csv"
+DATAFRAME_AVA_GCIAA_CAT_TRAIN_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-cat_train.csv"
+DATAFRAME_AVA_GCIAA_CAT_TEST_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-cat_test.csv"
 
-GCIAA_DIST_TRAIN_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-dist_train_dataframe.csv"
-GCIAA_DIST_TEST_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-dist_test_dataframe.csv"
+DATAFRAME_AVA_GCIAA_DIST_TRAIN_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-dist_train.csv"
+DATAFRAME_AVA_GCIAA_DIST_TEST_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-dist_test.csv"
 
-
-HORSES_DATASET_APPROVED_PATH = "../../data/horses/dataset/approved/"
-HORSES_DATASET_REJECTED_PATH = "../../data/horses/dataset/rejected/"
-
-PCIAA_CLUSTER_PATH = "../../data/horses/pciaa_metadata/horses_pciaa_clusters_dataframe.csv"
-PCIAA_PAIRS_PATH = "../../data/horses/pciaa_metadata/horses_pciaa_pairs_dataframe.csv"
-PCIAA_TRAIN_DATAFRAME_PATH = "../../data/horses/pciaa_metadata/horses_pciaa_train_dataframe.csv"
-PCIAA_TEST_DATAFRAME_PATH = "../../data/horses/pciaa_metadata/horses_pciaa_test_dataframe.csv"
+DATAFRAME_HORSES_CLUSTERS_PATH = "../../data/horses/pciaa_metadata/dataframe_horses_clusters.csv"
+DATAFRAME_HORSES_PAIRS_PATH = "../../data/horses/pciaa_metadata/dataframe_horses_pairs.csv"
+DATAFRAME_HORSES_PCIAA_TRAIN_PATH = "../../data/horses/pciaa_metadata/dataframe_horses_pciaa_train.csv"
+DATAFRAME_HORSES_PCIAA_TEST_PATH = "../../data/horses/pciaa_metadata/dataframe_horses_pciaa_test.csv"
 
 
 def prepare_dataframe_giiaa_mean(image_dataset_path, image_info_path):

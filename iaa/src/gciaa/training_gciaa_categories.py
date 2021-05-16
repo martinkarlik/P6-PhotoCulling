@@ -14,7 +14,7 @@ import os
 FULL_DATASET_TRAINING = True
 
 
-AVA_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-cat_train_dataframe.csv"
+AVA_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-cat_train.csv"
 AVA_DATAFRAME_SUBSET_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-cat_subset_dataframe.csv"
 
 GIIAA_MODEL = "../../models/giiaa_metadata/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"

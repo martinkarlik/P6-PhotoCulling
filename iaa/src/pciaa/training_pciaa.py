@@ -12,7 +12,7 @@ import pandas as pd
 import os
 
 
-HORSES_DATAFRAME_PATH = "../../data/horses/pciaa_metadata/horses_pciaa_train_dataframe.csv"
+HORSES_DATAFRAME_PATH = "../../data/horses/pciaa_metadata/dataframe_horses_pciaa_train.csv"
 
 GCIAA_MODEL = ""
 LOG_PATH = "../../data/ava/gciaa_metadata/logs"

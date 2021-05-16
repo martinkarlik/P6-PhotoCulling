@@ -12,7 +12,7 @@ import pandas as pd
 import os
 
 
-AVA_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-dist_train_dataframe.csv"
+AVA_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-dist_train.csv"
 
 GIIAA_MODEL = "../../models/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
 

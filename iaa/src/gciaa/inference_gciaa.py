@@ -17,7 +17,7 @@ GIIAA_MODEL = "../../models/giiaa_metadata/giiaa-hist_200k_base-inceptionresnetv
 GCIAA_MODEL = ""
 
 AVA_DATASET_TEST_PATH = "../../data/ava/dataset/test"
-AVA_DATAFRAME_TEST_PATH = "../../data/ava/giiaa_metadata/AVA_giiaa-hist_test_dataframe.csv"
+AVA_DATAFRAME_TEST_PATH = "../../data/ava/giiaa_metadata/dataframe_AVA_giiaa-hist_test.csv"
 
 BASE_MODEL_NAME = "InceptionResNetV2"
 
