@@ -1,6 +1,4 @@
 
-
-
 import importlib
 import numpy as np
 from tensorflow.keras.models import Model
@@ -31,32 +29,26 @@ def mapped_comparison_layer(vectors):
 
     mapped_distance = 1.0 / (1.0 + K.exp(-distance))
 
-    # means_a = K.print_tensor(means_a, message="means a")
-    # means_b = K.print_tensor(means_b, message="means b")
-    # distance = K.print_tensor(distance, message="distance")
-
-    # sum_a = K.sum(features_a)
-    # sum_b = K.sum(features_b)
-    # distance = K.transpose(sum_b - sum_a)
-
     return mapped_distance
 
 
 class BaseModule:
 
-    def __init__(self, base_model_name, weights=None, n_classes_base=1, loss=contrastive_loss, learning_rate=0.0001,
+    def __init__(self, weights=None, load_weights_as='GCIAA', base_model_name="InceptionResNetV2", n_classes_base=1, loss=contrastive_loss, learning_rate=0.0001,
                  decay=0, dropout_rate=0):
+
+        self.weights = weights
+        self.load_weights_as = load_weights_as
 
         self.base_model_name = base_model_name
         self.n_classes_base = n_classes_base
         self.loss = loss
-        self.weights = weights
 
         self.learning_rate = learning_rate
         self.decay = decay
         self.dropout_rate = dropout_rate
 
-        if self.base_model_name == "InceptionResNetV2":
+        if self.base_model_name == 'InceptionResNetV2':
             self.base_module = importlib.import_module('tensorflow.keras.applications.inception_resnet_v2')
         else:
             raise Exception("Trying to use unknown model: {}.".format(self.base_model_name))
@@ -76,7 +68,8 @@ class BaseModule:
 
         # Set image encode model to the trained GIIAA model.
         self.image_encoder_model = Model(imagenet_model.inputs, x)
-        self.image_encoder_model.load_weights(self.weights)
+        if self.load_weights_as == 'GIIAA':
+            self.image_encoder_model.load_weights(self.weights)
 
         # Build the siamese model.
         image_a = Input(shape=(224, 224, 3), dtype='float32')
@@ -85,9 +78,10 @@ class BaseModule:
         encoding_b = self.image_encoder_model(image_b)
 
         x = Lambda(mapped_comparison_layer, name="mapped_comparison_layer", output_shape=(1,))([encoding_a, encoding_b])
-        # x = Dense(units=1, activation=custom_sigmoid, use_bias=False, weights=np.ones([1, 1]))(x)
 
         self.siamese_model = Model(inputs=[image_a, image_b], outputs=x)
+        if self.load_weights_as == 'GCIAA':
+            self.siamese_model.load_weights(self.weights)
 
     def compile(self):
         self.siamese_model.compile(optimizer=RMSprop(lr=self.learning_rate), loss=self.loss, metrics=[accuracy])

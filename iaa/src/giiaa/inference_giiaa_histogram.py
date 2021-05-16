@@ -13,13 +13,10 @@ from iaa.src.giiaa.base_module_giiaa import *
 import tensorflow.keras as keras
 
 
-MODEL_PATH = "../../models/giiaa/model_giiaa-hist_200k_inceptionresnetv2_0.078.hdf5"
+MODEL_PATH = "../../models/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
 
-AVA_DATASET_SUBSET_PATH = "../../datasets/ava/subset/"
-AVA_DATAFRAME_SUBSET_PATH = "../../datasets/ava/giiaa/AVA_giiaa-hist_subset_dataframe.csv"
-
-AVA_DATASET_TEST_PATH = "../../datasets/ava/test/"
-AVA_DATAFRAME_TEST_PATH = "../../datasets/ava/giiaa/AVA_giiaa-hist_test_dataframe.csv"
+AVA_DATASET_TEST_PATH = "../../data/ava/dataset/test/"
+AVA_DATAFRAME_TEST_PATH = "../../data/ava/giiaa_metadata/AVA_giiaa-hist_test_dataframe.csv"
 
 
 def get_mean(distribution):
@@ -40,7 +37,7 @@ if __name__ == "__main__":
     model = nima.nima_model
     model.compile()
 
-    dataframe = pd.read_csv(AVA_DATAFRAME_SUBSET_PATH, converters={'label': eval})
+    dataframe = pd.read_csv(AVA_DATAFRAME_TEST_PATH, converters={'label': eval})
 
     count_all = 200
     count_correct = 0
@@ -53,7 +50,7 @@ if __name__ == "__main__":
 
         for ii in range(2):
 
-            random_file = os.path.join(AVA_DATASET_SUBSET_PATH, random.choice(os.listdir(AVA_DATASET_SUBSET_PATH)))
+            random_file = os.path.join(AVA_DATASET_TEST_PATH, random.choice(os.listdir(AVA_DATASET_TEST_PATH)))
             image = cv2.resize(cv2.imread(random_file), (224, 224)) / 255.0
             image = np.asarray(image)[np.newaxis, ...]
 

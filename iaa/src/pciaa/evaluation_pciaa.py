@@ -14,10 +14,10 @@ from iaa.src.utils.generators import *
 import pandas as pd
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-GIIAA_MODEL = "../../models/giiaa/model_giiaa-hist_200k_inceptionresnetv2_0.078.hdf5"
+GIIAA_MODEL = "../../models/giiaa_metadata/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
 PCIAA_HORSES_MODEL = ""
 
-HORSES_DATAFRAME_TEST_PATH = "../../datasets/horses/horses_pciaa_test_dataframe.csv"
+HORSES_DATAFRAME_TEST_PATH = "../../data/horses/pciaa_metadata/horses_pciaa_test_dataframe.csv"
 
 BASE_MODEL_NAME = "InceptionResNetV2"
 BATCH_SIZE = 64

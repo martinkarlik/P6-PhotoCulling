@@ -12,35 +12,32 @@ import random
 from PIL import Image
 from iaa.src.utils.clustering import ClusteringEngine
 
-AVA_TEXT_PATH = "../../datasets/ava/AVA.txt"
 
-AVA_DATASET_TRAIN_PATH = "../../datasets/ava/train"
-AVA_DATASET_TEST_PATH = "../../datasets/ava/test"
-AVA_DATASET_SUBSET_PATH = "../../datasets/ava/subset/"
+AVA_TEXT_PATH = "../../data/ava/AVA.txt"
+AVA_DATASET_TRAIN_PATH = "../../data/ava/dataset/train"
+AVA_DATASET_TEST_PATH = "../../data/ava/dataset/test"
 
-AVA_DATAFRAME_GIIAA_HIST_TRAIN_PATH = "../../datasets/ava/giiaa/AVA_giiaa-hist_train_dataframe.csv"
-AVA_DATAFRAME_GIIAA_HIST_TEST_PATH = "../../datasets/ava/giiaa/AVA_giiaa-hist_test_dataframe.csv"
-AVA_DATAFRAME_GIIAA_HIST_SUBSET_PATH = "../../datasets/ava/giiaa/AVA_giiaa-hist_subset_dataframe.csv"
-
-AVA_DATAFRAME_GCIAA_CAT_TRAIN_PATH = "../../datasets/ava/gciaa/AVA_gciaa-cat_train_dataframe.csv"
-AVA_DATAFRAME_GCIAA_CAT_TEST_PATH = "../../datasets/ava/gciaa/AVA_gciaa-cat_test_dataframe.csv"
-AVA_DATAFRAME_GCIAA_CAT_SUBSET_PATH = "../../datasets/ava/gciaa/AVA_gciaa-cat_subset_dataframe.csv"
-
-AVA_DATAFRAME_GCIAA_DIST_TRAIN_PATH = "../../datasets/ava/gciaa/AVA_gciaa-dist_train_dataframe.csv"
-AVA_DATAFRAME_GCIAA_DIST_TEST_PATH = "../../datasets/ava/gciaa/AVA_gciaa-dist_test_dataframe.csv"
-AVA_DATAFRAME_GCIAA_DIST_SUBSET_PATH = "../../datasets/ava/gciaa/AVA_gciaa-dist_subset_dataframe.csv"
-
-HORSES_DATASET_APPROVED_PATH = "../../datasets/horses/approved/"
-HORSES_DATASET_REJECTED_PATH = "../../datasets/horses/rejected/"
-
-HORSES_DATAFRAME_CLUSTERS_PATH = "../../datasets/horses/horses_pciaa_clusters_dataframe.csv"
-HORSES_DATAFRAME_PAIRS_PATH = "../../datasets/horses/horses_pciaa_pairs_dataframe.csv"
-HORSES_DATAFRAME_PCIAA_TRAIN_PATH = "../../datasets/horses/horses_pciaa_train_dataframe.csv"
-HORSES_DATAFRAME_PCIAA_TEST_PATH = "../../datasets/horses/horses_pciaa_test_dataframe.csv"
+SELECTED_CATEGORIES_FOR_GCIAA_CAT_TRAINING = (19, 20, 43, 57, 21, 50, 2, 4, 38, 14, 15, 47, 7, 42, 26)
+RANDOM_SEED = 31
 
 
-SELECTED_CATEGORIES_FOR_PAIRWISE_TRAINING = (19, 20, 43, 57, 21, 50, 2, 4, 38, 14, 15, 47, 7, 42, 26)
-SEED = 31
+GIIAA_HIST_TRAIN_DATAFRAME_PATH = "../../data/ava/giiaa_metadata/AVA_giiaa-hist_train_dataframe.csv"
+GIIAA_HIST_TEST_DATAFRAME_PATH = "../../data/ava/giiaa_metadata/AVA_giiaa-hist_test_dataframe.csv"
+
+GCIAA_CAT_TRAIN_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-cat_train_dataframe.csv"
+GCIAA_CAT_TEST_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-cat_test_dataframe.csv"
+
+GCIAA_DIST_TRAIN_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-dist_train_dataframe.csv"
+GCIAA_DIST_TEST_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-dist_test_dataframe.csv"
+
+
+HORSES_DATASET_APPROVED_PATH = "../../data/horses/dataset/approved/"
+HORSES_DATASET_REJECTED_PATH = "../../data/horses/dataset/rejected/"
+
+PCIAA_CLUSTER_PATH = "../../data/horses/pciaa_metadata/horses_pciaa_clusters_dataframe.csv"
+PCIAA_PAIRS_PATH = "../../data/horses/pciaa_metadata/horses_pciaa_pairs_dataframe.csv"
+PCIAA_TRAIN_DATAFRAME_PATH = "../../data/horses/pciaa_metadata/horses_pciaa_train_dataframe.csv"
+PCIAA_TEST_DATAFRAME_PATH = "../../data/horses/pciaa_metadata/horses_pciaa_test_dataframe.csv"
 
 
 def prepare_dataframe_giiaa_mean(image_dataset_path, image_info_path):
@@ -127,7 +124,7 @@ def prepare_dataframe_giiaa_hist(image_dataset_path, image_info_path):
         for i in range(1, 11):
             score_distribution.append(image_data[str(i)] / num_annotations)
 
-        data['id'].append(filename)
+        data['id'].append(os.path.join(image_dataset_path, filename))
         data['label'].append(score_distribution)
 
     print("{} indices were not found in the image dataset.".format(count_failed))
@@ -138,8 +135,10 @@ def prepare_dataframe_giiaa_hist(image_dataset_path, image_info_path):
 def prepare_dataframe_gciaa_cat(
         image_dataset_path,
         image_info_path,
-        selected_categories=SELECTED_CATEGORIES_FOR_PAIRWISE_TRAINING,
+        selected_categories=SELECTED_CATEGORIES_FOR_GCIAA_CAT_TRAINING,
         pairs_per_category_scalar=0.7):
+
+    np.random.seed(RANDOM_SEED)
 
     original_dataframe = pd.read_csv(image_info_path, sep=' ')
 
@@ -202,7 +201,7 @@ def prepare_dataframe_gciaa_dist(
     }
 
     filenames = os.listdir(image_dataset_path)
-    random.Random(SEED).shuffle(filenames)
+    random.Random(RANDOM_SEED).shuffle(filenames)
 
     for filename in tqdm(filenames[:int(len(filenames) * pairs_per_dataset_scalar)]):
 
@@ -248,6 +247,8 @@ def prepare_dataframe_pciaa_clusters(image_dataset_approved_path, image_dataset_
 
 def prepare_dataframe_pciaa_pairs(cluster_dataframe_path):
 
+    np.random.seed(RANDOM_SEED)
+
     cluster_dataframe = pd.read_csv(cluster_dataframe_path)
 
     generated_pairs = {
@@ -283,7 +284,7 @@ def prepare_dataframe_pciaa_pairs(cluster_dataframe_path):
 def split_dataframe_test_train(pairs_dataframe_path, test_split=0.4):
     pairs_dataframe = pd.read_csv(pairs_dataframe_path, index_col=0)
 
-    np.random.seed(SEED)
+    np.random.seed(RANDOM_SEED)
     mask = np.random.rand(len(pairs_dataframe)) < test_split
 
     train_split = pairs_dataframe[~mask]
@@ -293,7 +294,6 @@ def split_dataframe_test_train(pairs_dataframe_path, test_split=0.4):
 
 
 if __name__ == "__main__":
-    dataframe_train, dataframe_test = split_dataframe_test_train(HORSES_DATAFRAME_PAIRS_PATH)
-    dataframe_train.to_csv(HORSES_DATAFRAME_PCIAA_TRAIN_PATH)
-    dataframe_test.to_csv(HORSES_DATAFRAME_PCIAA_TEST_PATH)
-
+    dataframe_train, dataframe_test = split_dataframe_test_train(PCIAA_PAIRS_PATH)
+    dataframe_train.to_csv(PCIAA_TRAIN_DATAFRAME_PATH)
+    dataframe_test.to_csv(PCIAA_TEST_DATAFRAME_PATH)

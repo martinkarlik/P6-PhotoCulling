@@ -18,11 +18,6 @@ def earth_movers_distance(y_true, y_predicted):
     return K.mean(emd)
 
 
-def accuracy(y_true, y_predicted):
-    print("hello?")
-    return 0.35
-
-
 class NimaModule:
 
     def __init__(self, base_model_name="InceptionResNetV2", n_classes=10,
@@ -64,7 +59,7 @@ class NimaModule:
         self.nima_model.compile(
             optimizer=Adam(lr=self.learning_rate, decay=self.decay),
             loss=self.loss,
-            metrics=['earth_movers_distance', 'accuracy'])
+            metrics=['earth_movers_distance'])
 
     def preprocess(self):
         return self.base_module.preprocess_input

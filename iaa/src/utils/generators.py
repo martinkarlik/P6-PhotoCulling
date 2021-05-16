@@ -91,7 +91,7 @@ class SiameseGeneratorDistortions:
         return distorted_image
 
     @staticmethod
-    def apply_blob(image):
+    def apply_blob_overlay(image):
         distorted_image = np.array(image)
 
         radius_x = random.randrange(10, 50)

@@ -3,11 +3,11 @@
 website/app/package-lock.json
 *.json
 *.bin
-iaa/datasets/ava/train
-iaa/datasets/ava/test
-iaa/datasets/ava/subset
-iaa/datasets/horses/rejected
-iaa/datasets/horses/approved
+iaa/data/ava/dataset/train
+iaa/data/ava/dataset/test
+iaa/data/ava/subset
+iaa/data/horses/dataset/rejected
+iaa/data/horses/dataset/approved
 iaa/models
 iaa/src/giiaa/__pycache__
 iaa/src/gciaa/__pycache__

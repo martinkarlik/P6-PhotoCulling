@@ -1,5 +1,5 @@
 """
-Evaluation of GCIAA pair-wise within-category classification.
+Evaluation of within-category trained GCIAA model.
 Evaluated on 20 231 within-category generated pairs from AVA dataset.
 Performance of the within-category trained GCIAA model is compared
 with the baseline GCIAA model with the GIIAA model as the image encoder.
@@ -14,12 +14,11 @@ from iaa.src.utils.generators import *
 import pandas as pd
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-GIIAA_MODEL = "../../models/giiaa/model_giiaa-hist_200k_inceptionresnetv2_0.078.hdf5"
-GCIAA_CATEGORIES_MODEL = ""
-# Should be the saved GCIAA weights
+GIIAA_MODEL = "../../models/giiaa_metadata/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
+GCIAA_CATEGORIES_MODEL = ""  # Should be the saved GCIAA weights
 
-AVA_DATASET_TEST_PATH = "../../datasets/ava/test/"
-AVA_DATAFRAME_TEST_PATH = "../../datasets/ava/gciaa/AVA_gciaa-cat_test_dataframe.csv"
+AVA_DATASET_TEST_PATH = "../../data/ava/dataset/test/"
+AVA_DATAFRAME_TEST_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-cat_test_dataframe.csv"
 
 BASE_MODEL_NAME = "InceptionResNetV2"
 BATCH_SIZE = 64
@@ -28,10 +27,7 @@ BATCH_SIZE = 64
 if __name__ == "__main__":
 
     # model = keras.models.load_model(WEIGHTS_PATH, custom_objects={"earth_movers_distance": earth_movers_distance})
-    base = BaseModule(
-        base_model_name=BASE_MODEL_NAME,
-        weights=GIIAA_MODEL)
-
+    base = BaseModule(weights=GCIAA_CATEGORIES_MODEL)
     base.build()
     base.compile()
 

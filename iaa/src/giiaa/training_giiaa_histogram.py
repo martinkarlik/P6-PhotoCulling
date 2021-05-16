@@ -10,18 +10,11 @@ import pandas as pd
 import os
 
 
-FULL_DATASET_TRAINING = True
+AVA_DATASET_PATH = "../../data/ava/dataset/train"
+AVA_DATAFRAME_PATH = "../../data/ava/giiaa_metadata/AVA_giiaa-hist_train_dataframe.csv"
 
-
-AVA_DATASET_PATH = "../../datasets/ava/train"
-AVA_DATAFRAME_PATH = "../../datasets/ava/giiaa/AVA_giiaa-hist_train_dataframe.csv"
-
-AVA_DATASET_SUBSET_PATH = "../../datasets/ava/subset/"
-AVA_DATAFRAME_SUBSET_PATH = "../../datasets/ava/giiaa/AVA_giiaa-hist_subset_dataframe.csv"
-
-LOG_PATH = "../../datasets/ava/giiaa/logs"
+LOG_PATH = "../../data/ava/giiaa_metadata/giiaa-hist_logs"
 MODELS_PATH = "../../models/giiaa/"
-
 
 
 BASE_MODEL_NAME = "InceptionResNetV2"
@@ -42,20 +35,13 @@ DECAY_ALL = 0.000023
 
 if __name__ == "__main__":
 
-    if FULL_DATASET_TRAINING:
-        dataset_path = AVA_DATASET_PATH
-        dataframe_path = AVA_DATAFRAME_PATH
-        model_name_tag = 'model_dist_200k_'
-    else:
-        dataset_path = AVA_DATASET_SUBSET_PATH
-        dataframe_path = AVA_DATAFRAME_SUBSET_PATH
-        model_name_tag = 'model_dist_2k_'
+    MODEL_NAME_TAG = 'giiaa-hist_200k_base-'
 
     base_model_name = BASE_MODEL_NAME
     nima = NimaModule(base_model_name, N_CLASSES, LEARNING_RATE_DENSE, DECAY_DENSE, DROPOUT_RATE)
     nima.build()
 
-    dataframe = pd.read_csv(dataframe_path, converters={'label': eval})
+    dataframe = pd.read_csv(AVA_DATAFRAME_PATH, converters={'label': eval})
 
     data_generator = ImageDataGenerator(
         rescale=1.0 / 255,
@@ -63,7 +49,6 @@ if __name__ == "__main__":
     )
 
     train_generator = data_generator.flow_from_dataframe(
-        directory=dataset_path,
         dataframe=dataframe,
         x_col='id',
         y_col=['label'],
@@ -75,7 +60,6 @@ if __name__ == "__main__":
     )
 
     validation_generator = data_generator.flow_from_dataframe(
-        directory=dataset_path,
         dataframe=dataframe,
         x_col='id',
         y_col=['label'],
@@ -90,7 +74,7 @@ if __name__ == "__main__":
         log_dir=LOG_PATH, update_freq='batch'
     )
 
-    model_save_name = (model_name_tag + base_model_name.lower() + '_{val_loss:.3f}.hdf5')
+    model_save_name = (MODEL_NAME_TAG + base_model_name.lower() + '_{val_loss:.3f}.hdf5')
     model_file_path = os.path.join(MODELS_PATH, model_save_name)
     model_checkpointer = ModelCheckpoint(
         filepath=model_file_path,
