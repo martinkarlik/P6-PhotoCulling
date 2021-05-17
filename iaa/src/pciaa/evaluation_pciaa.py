@@ -19,16 +19,11 @@ PCIAA_HORSES_MODEL = ""
 
 HORSES_DATAFRAME_TEST_PATH = "../../data/horses/pciaa_metadata/dataframe_horses_pciaa_test.csv"
 
-BASE_MODEL_NAME = "InceptionResNetV2"
-BATCH_SIZE = 64
-
 
 if __name__ == "__main__":
 
     # model = keras.models.load_model(WEIGHTS_PATH, custom_objects={"earth_movers_distance": earth_movers_distance})
-    base = BaseModule(
-        base_model_name=BASE_MODEL_NAME,
-        weights=PCIAA_HORSES_MODEL)
+    base = BaseModule(weights=GIIAA_MODEL, load_weights_as='GIIAA')
 
     base.build()
     base.compile()

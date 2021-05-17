@@ -14,9 +14,11 @@ import os
 
 HORSES_DATAFRAME_PATH = "../../data/horses/pciaa_metadata/dataframe_horses_pciaa_train.csv"
 
+GIIAA_MODEL = "../../models/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
 GCIAA_MODEL = ""
+
 LOG_PATH = "../../data/ava/gciaa_metadata/logs"
-MODELS_PATH = "../../models/gciaa/"
+MODELS_PATH = "../../models/"
 MODEL_NAME_TAG = "pciaa_horses_90k-pairs"
 
 BASE_MODEL_NAME = "InceptionResNetV2"
@@ -44,9 +46,7 @@ if __name__ == "__main__":
         save_weights_only=True,
     )
 
-    base = BaseModule(
-        base_model_name=BASE_MODEL_NAME,
-        weights=GCIAA_MODEL)
+    base = BaseModule(weights=GIIAA_MODEL, load_weights_as='GIIAA')
     base.build()
     base.compile()
 

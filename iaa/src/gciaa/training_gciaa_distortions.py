@@ -15,6 +15,7 @@ import os
 AVA_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-dist_train.csv"
 
 GIIAA_MODEL = "../../models/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
+GCIAA_DISTORTIONS_MODEL = "../../models/gciaa-dist_51k_base-giiaa_accuracy-0.865.hdf5"
 
 MODELS_PATH = "../../models"
 MODEL_NAME_TAG = 'gciaa-dist_51k_base-giiaa'
@@ -46,7 +47,7 @@ if __name__ == "__main__":
         save_weights_only=True,
     )
 
-    base = BaseModule(weights=GIIAA_MODEL)
+    base = BaseModule(weights=GCIAA_DISTORTIONS_MODEL)
     base.build()
     base.compile()
 
@@ -85,8 +86,7 @@ if __name__ == "__main__":
 
     base.siamese_model.fit(
         train_generator.get_pairwise_flow_from_dataframe(),
-        # steps_per_epoch=train_generator.samples_per_epoch // train_generator.batch_size,
-        steps_per_epoch=5,
+        steps_per_epoch=train_generator.samples_per_epoch // train_generator.batch_size,
         validation_data=validation_generator.get_pairwise_flow_from_dataframe(),
         validation_steps=validation_generator.samples_per_epoch // validation_generator.batch_size,
         epochs=EPOCHS,

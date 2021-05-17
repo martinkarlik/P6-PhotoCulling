@@ -5,32 +5,32 @@ Distortions are evaluated individually, the performance of the distortion-traine
 is compared with the baseline GCIAA model with GIIAA model as the image encoder.
 
 UNDEREXPOSURE   Baseline    |   Distortion trained GCIAA
-Loss:           0.4432      |   0.1675
-Accuracy:       0.7948      |   0.9376
+Loss:           0.4432      |   0.1060
+Accuracy:       0.7948      |   0.9580
 
 OVEREXPOSURE    Baseline    |   Distortion trained GCIAA
-Loss:           0.4512      |   0.0000
-Accuracy:       0.7531      |   0.0000
+Loss:           0.4512      |   0.6056
+Accuracy:       0.7531      |   0.3561
 
 ROTATION        Baseline    |   Distortion trained GCIAA
-Loss:           0.3825      |   0.0000
-Accuracy:       0.9742      |   0.0000
+Loss:           0.3825      |   0.0566
+Accuracy:       0.9742      |   0.9841
 
 SHEARING        Baseline    |   Distortion trained GCIAA
-Loss:           0.4282      |   0.0000
-Accuracy:       0.8120      |   0.0000
+Loss:           0.4282      |   0.0553
+Accuracy:       0.8120      |   0.9822
 
 ZOOMING         Baseline    |   Distortion trained GCIAA
-Loss:           0.3726      |   0.0000
-Accuracy:       0.9508      |   0.0000
+Loss:           0.3726      |   0.0531
+Accuracy:       0.9508      |   0.9850
 
 BLUR            Baseline    |   Distortion trained GCIAA
-Loss:           0.3749      |   0.0000
-Accuracy:       0.9265      |   0.0000
+Loss:           0.3749      |   0.1900
+Accuracy:       0.9265      |   0.8462
 
 BLOB OVERLAY    Baseline    |   Distortion trained GCIAA
-Loss:           0.4951      |   0.0000
-Accuracy:       0.7190      |   0.0000
+Loss:           0.4951      |   0.3202
+Accuracy:       0.7190      |   0.9036
 
 ----------------------------------------------------------
 
@@ -47,7 +47,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
 GIIAA_MODEL = "../../models/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
-GCIAA_DISTORTIONS_MODEL = "../../models/gciaa-dist_51k_base-giiaa_accuracy-0.865.hdf5"
+GCIAA_DISTORTIONS_MODEL = "../../models/gciaa-dist_51k_base-giiaa_accuracy-0.906.hdf5"
 
 AVA_DATAFRAME_TEST_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-dist_test.csv"
 
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     )
 
     distortion_generators = [
-        DISTORTION_GENERATORS[0]
+        DISTORTION_GENERATORS[6]
     ]
 
     test_generator = SiameseGeneratorDistortions(
