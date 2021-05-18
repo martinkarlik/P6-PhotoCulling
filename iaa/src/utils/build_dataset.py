@@ -4,9 +4,9 @@ import PIL.Image
 import tqdm
 
 DATASET_PATH = "../../iaa/ava/images"
-OUTPUT_DIRECTORY_PATH = "../../ava"
+OUTPUT_DIRECTORY_PATH = "../../data/ava/dataset"
 
-SEED = 420
+RANDOM_SEED = 420
 TRAIN_TEST_SPLIT = 0.8
 
 
@@ -53,4 +53,4 @@ def generate_train_test(dataset_path, output_path, seed):
 
 
 if __name__ == "__main__":
-    generate_train_test(DATASET_PATH, OUTPUT_DIRECTORY_PATH, SEED)
+    generate_train_test(DATASET_PATH, OUTPUT_DIRECTORY_PATH, RANDOM_SEED)

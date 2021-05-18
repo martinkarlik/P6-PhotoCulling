@@ -7,13 +7,8 @@ As this is a regression problem, the labels are normalized average ranks of aest
 from iaa.src.utils.dataframe_preparation import *
 import tensorflow as tf
 
-IMAGE_DATASET_PATH = "../../ava/train"
-IMAGE_DATASET_SUBSET_PATH = "../../ava/subset/"
 
-AVA_TEXT_PATH = "../../ava/AVA.txt"
 AVA_DATAFRAME_PATH = "../../iaa/ava/AVA_mean_dataframe.csv"
-AVA_DATAFRAME_SUBSET_PATH = "../../iaa/ava/AVA_mean_dataframe_subset.csv"
-
 MODEL_PATH = "../../iaa/models/model_AVAsubset_val_loss-0.0037.h5"
 
 EPOCHS = 10
@@ -71,7 +66,6 @@ if __name__ == "__main__":
     )
 
     train_generator = data_generator.flow_from_dataframe(
-        directory=IMAGE_DATASET_PATH,
         dataframe=dataframe,
         x_col="id",
         y_col="score",
@@ -83,7 +77,6 @@ if __name__ == "__main__":
     )
 
     validation_generator = data_generator.flow_from_dataframe(
-        directory=IMAGE_DATASET_PATH,
         dataframe=dataframe,
         x_col="id",
         y_col="score",

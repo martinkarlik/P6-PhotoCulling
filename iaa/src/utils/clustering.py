@@ -30,96 +30,126 @@ Possible improvements:
       unnecessarily complicated for our problem, so I wrote this for now.)
 """
 
-
 import datetime as dt
+import numpy as np
+from tqdm import tqdm
+import functools
 
-FORMAT = "%y/%m/%d %H:%M:%S"
-DISTANCE_THRESHOLD = (0, 5)  # 0 days, 5 seconds
-
-
-def get_distance(time_stamp_a, time_stamp_b):
-
-    distance = dt.datetime.strptime(time_stamp_b, FORMAT) - dt.datetime.strptime(time_stamp_a, FORMAT)
-    return [distance.days, distance.seconds]
+FORMAT = "%Y:%m:%d %H:%M:%S"
+DISTANCE_THRESHOLD = (0, 60)  # days, seconds
 
 
-def is_predecessor(time_stamp_a, time_stamp_b):
-    """Did time_stamp_a come before time_stamp_b?"""
+class ClusteringEngine:
 
-    distance = get_distance(time_stamp_a, time_stamp_b)
+    def __init__(self, data):
+        self.data = data
 
-    for i in range(0, len(distance)):
-        if distance[i] != 0:
-            return distance[i] > 0
+    def _get_distance(self, timestamp_a, timestamp_b):
 
-    # If two time stamps are equal, (i) this will never happen (ii) let's just return True
-    return True
+        distance = dt.datetime.strptime(timestamp_b, FORMAT) - \
+                   dt.datetime.strptime(timestamp_a, FORMAT)
+        return [distance.days, distance.seconds]
+
+    def _is_predecessor(self, timestamp_a, timestamp_b):
+        """Did timestamp_a come before timestamp_b?"""
+
+        distance = self._get_distance(timestamp_a, timestamp_b)
+
+        for i in range(0, len(distance)):
+            if distance[i] != 0:
+                return distance[i] > 0
+
+        # If two time stamps are equal, (i) this should never happen (ii) let's just return True
+        return True
+
+    def _in_proximity(self, timestamp_a, timestamp_b, distance_threshold=DISTANCE_THRESHOLD):
+        """Is one time stamp close to another time stamp with respect to distance threshold?"""
+
+        distance = self._get_distance(timestamp_a, timestamp_b) if \
+            self._is_predecessor(timestamp_a, timestamp_b) else \
+            self._get_distance(timestamp_b, timestamp_a)
+
+        result = True
+
+        for i in range(0, len(distance)):
+            if abs(distance[i]) > distance_threshold[i]:
+                result = False
+                break
+
+        return result
+
+    def _insert_chronologically(self, example, cluster):
+        """This function inserts a datapoint into a cluster chronologically."""
+
+        is_timestamp_inserted = False
+        for i in range(0, len(cluster)):
+            if self._is_predecessor(example, cluster[i]):
+                cluster.insert(i, example)
+                is_timestamp_inserted = True
+
+        if not is_timestamp_inserted:
+            cluster.append(example)
+
+    def cluster_chronologically(self):
+        """The actual algorithm."""
+
+        clusters = {}
+
+        for timestamp in tqdm(self.data):
+
+            is_timestamp_sorted = False
+
+            i = 0
+            while i < len(clusters) and not is_timestamp_sorted:
+
+                j = 0
+                while j < len(clusters[i]) and not is_timestamp_sorted:
+                    if self._in_proximity(timestamp, clusters[i][j]):
+                        self._insert_chronologically(timestamp, clusters[i])
+                        is_timestamp_sorted = True
+                    j += 1
+
+                i += 1
+
+            if not is_timestamp_sorted:
+                clusters[len(clusters)] = [timestamp]
+
+        cluster_vector = np.zeros(len(self.data))
+
+        for key in tqdm(clusters):
+
+            for timestamp in clusters[key]:
+                cluster_vector[np.where(self.data == timestamp)] = key
+
+        return cluster_vector.tolist()
+
+    def cluster_chronologically_sorted(self):
+
+        def comparator(a, b):
+            result = -1 if self._is_predecessor(a, b) else 1
+            return result
+
+        sorted_data = sorted(self.data, key=functools.cmp_to_key(comparator))
+        cluster_vector = np.zeros(len(self.data))
+
+        cluster_index = 0
+        for i in tqdm(range(len(sorted_data) - 1)):
+
+            indices = [ii for ii in range(len(self.data)) if self.data[ii] == sorted_data[i]]
+            for ii in indices:
+                cluster_vector[ii] = cluster_index
+
+            if not self._in_proximity(sorted_data[i], sorted_data[i + 1]):
+                cluster_index += 1
+
+        print(cluster_vector)
+
+        return cluster_vector.tolist()
 
 
-def in_proximity(time_stamp_a, time_stamp_b, distance_threshold=DISTANCE_THRESHOLD):
-    """Is one time stamp close to another time stamp with respect to distance threshold?"""
-
-    result = True
-
-    distance = get_distance(time_stamp_a, time_stamp_b) if is_predecessor(time_stamp_a, time_stamp_b) else get_distance(time_stamp_b, time_stamp_a)
-
-    for i in range(0, len(distance)):
-        if abs(distance[i]) > distance_threshold[i]:
-            result = False
-            break
-
-    return result
+    def get_cluster_vector(self):
+        if self.clusters is None:
+            return
 
 
-def insert_time_stamp_chronologically(time_stamp, cluster):
-    """This function inserts time stamp into a cluster chronologically."""
-
-    is_time_stamp_inserted = False
-    for i in range(0, len(cluster)):
-        if is_predecessor(time_stamp, cluster[i]):
-            cluster.insert(i, time_stamp)
-            is_time_stamp_inserted = True
-
-    if not is_time_stamp_inserted:
-        cluster.append(time_stamp)
-
-
-def cluster_data(time_data):
-    """The actual algorithm"""
-
-    clusters = {}
-
-    for time_stamp in time_data:
-
-        is_time_stamp_sorted = False
-
-        i = 0
-        while i < len(clusters) and not is_time_stamp_sorted:
-
-            j = 0
-            while j < len(clusters[i]) and not is_time_stamp_sorted:
-                if in_proximity(time_stamp, clusters[i][j]):
-                    insert_time_stamp_chronologically(time_stamp, clusters[i])
-                    is_time_stamp_sorted = True
-                j += 1
-
-            i += 1
-
-        if not is_time_stamp_sorted:
-            clusters[len(clusters)] = [time_stamp]
-
-    return clusters
-
-
-if __name__ == "__main__":
-
-    time_data = ["21/03/08 09:18:44", "21/03/08 09:18:43",
-                 "20/03/08 09:18:43", "20/03/08 09:18:44", "21/03/08 09:18:45"]
-
-    clusters = cluster_data(time_data)
-
-    for key in clusters:
-        print("Cluster {}:".format(key))
-        print(clusters[key])
-        print("---")
 

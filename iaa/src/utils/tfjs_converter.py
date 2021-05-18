@@ -4,7 +4,7 @@ Converts hdf5 model into JS model.
 
 import tensorflowjs as tfjs
 import tensorflow as tf
-from iaa.src.gciaa._base import *
+from iaa.src.gciaa.base_module_gciaa import *
 
 INPUT_MODEL_PATH = "../../models/gciaa/model_gciaa_siamese_base.hdf5"
 OUTPUT_MODEL_PATH = "../../models/gciaa/model_gciaa_2k_siamese_model"
