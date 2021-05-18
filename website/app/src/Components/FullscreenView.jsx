@@ -65,10 +65,7 @@ export default function FullscreenView() {
   }, [acceptedImageKeys, clusterIndex]);
 
   return (
-    <StyledFullscreenSection
-      className="grid-container-fluid"
-      id="fullscreenView"
-    >
+    <StyledFullscreenSection id="fullscreenView">
       <div className="vertical-cluster">
         <h1>
           <svg
@@ -152,7 +149,11 @@ export default function FullscreenView() {
         <ul className="aiList">
           <li>
             {" "}
-            Confidence <span className="nothingness"> nothingnesssss </span> 38%
+            Confidence <span className="nothingness">
+              {" "}
+              nothingnessssss{" "}
+            </span>{" "}
+            38%
           </li>
           <li>
             {" "}
@@ -187,6 +188,7 @@ const StyledFullscreenSection = styled.section`
   background-color: #0d0d0d;
   margin: 0 !important;
   display: grid;
+  height: 100vh;
   grid-template-columns: 0.65fr 0.5fr 1.5fr 1.5fr;
   grid-template-rows: 1.8fr 0.71fr 1fr;
   gap: 0.1em 0.1em;
@@ -217,6 +219,7 @@ const StyledFullscreenSection = styled.section`
     grid-area: bigImageContainer;
     align-items: center;
     margin: 2em 3em 3em 18em;
+    overflow-y: hidden;
   }
 
   /* .clustersPanel{

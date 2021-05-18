@@ -70,6 +70,8 @@ const StyledVertClusterSection = styled.section`
   }
   .overlay {
     position: absolute;
+    min-width: 1%;
+    max-width: 100%;
     bottom: 0%;
     background: rgba(0, 0, 0, 0.6); /* Black see-through */
     min-width: 1%;
@@ -82,6 +84,8 @@ const StyledVertClusterSection = styled.section`
   }
   .bigOverlay {
     position: absolute;
+    min-width: 1%;
+    max-width: 100%;
     bottom: 0%;
     background: rgba(0, 0, 0, 0.6); /* Black see-through */
     min-width: 1%;
