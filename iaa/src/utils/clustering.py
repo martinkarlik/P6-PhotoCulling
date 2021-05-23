@@ -1,33 +1,28 @@
 """
 This script solves the problem of clustering data based on its time information.
 
-Image's time metadata is expected to follow a format "YY/MM/DD HH:MM:SS",
-although this script is adaptable and adding or removing information (say changing the format,
+Image's timestamp is expected to follow a format "YYYY:MM:DD HH:MM:SS", but
+this script is adaptable and adding or removing information (say changing the format,
 removing year data, or adding milliseconds or the image's file index) is a minor implementation change.
 
 Input: An array (any size) of textual time data information in the format above.
 Output: A key-value store encoding the cluster information. Keys are cluster indices (positive integers),
-values are lists containing chronologically ordered time data belonging to a cluster.
+values are lists containing chronologically ordered time data belonging to a certain cluster.
 
 Algorithm:
     * We use distance between data stamps to determine the neighbours, which should be clustered together.
     * The distance is represented as a tuple: (days, seconds), see DISTANCE THRESHOLD below. It is something
-      like a priority-ordered distance tuple. If extra information is necessary (file index when time data missing,
-      or some other metadata), it can simply be added to the distance representation, e.g. (days, seconds, file_index)
-      The representation of distance using a uniform scale, say seconds or milliseconds,
-      could cause data overflow when dealing with a huge distance, that's why a tuple. (One year is 3.2 × 10^10 milliseconds,
-      we cannot store that in a numeric variable. There probably won't be a one year difference between our
-      images, but when solving a problem, it's a good practice to generalize it to its extreme.)
-    * We loop through all time stamps and compare them with the ones already clustered. If a time stamp is
-      close enough (less than DISTANCE_THRESHOLD) to any other time stamp in a cluster,
-      the time stamp is put into that cluster. If it belongs to no cluster, it is put to a new cluster.
+      like a priority-ordered distance tuple. Extra information can be added to it (e.g file index, geolocation).
+    * There are two methods for clustering:
+        - cluster_chronologically_sorted first sorts the entire array, and then finds the clusters. This one is much
+            faster when clustering a large set of unsorted images.
+        - cluster_chronologically is preferred when the images are already sorted, and only a few new images should
+            be put into the existing clusters.
 
 Possible improvements:
-    * Cluster content is ordered chronologically, but not the clusters themselves.
+    * Image's pixels could me used to cluster the images, e.g. by using K-Means clusering, or similar.
     * Other metadata, such as image's file index could be considered, when image's time data is ambigous or missing.
     * Distance threshold could adapt to the context.
-    * This is quite a basic implementation. (I googled time series clustering, but what I found seemed to be
-      unnecessarily complicated for our problem, so I wrote this for now.)
 """
 
 import datetime as dt
@@ -146,10 +141,6 @@ class ClusteringEngine:
 
         return cluster_vector.tolist()
 
-
-    def get_cluster_vector(self):
-        if self.clusters is None:
-            return
 
 
 

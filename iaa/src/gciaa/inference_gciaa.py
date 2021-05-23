@@ -1,10 +1,8 @@
 """
-Using GCIAA to make inference on a few random samples from the subset of images.
+Using the differently trained GCIAA models to make inference on a few random samples from the AVA test folder.
 """
 
-import numpy as np
 import pandas as pd
-from tqdm import tqdm
 import cv2
 import os
 import random
@@ -13,13 +11,13 @@ from iaa.src.giiaa.base_module_giiaa import *
 import tensorflow.keras as keras
 
 
-GIIAA_MODEL = "../../models/giiaa_metadata/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
-GCIAA_MODEL = ""
+GIIAA_MODEL = "../../models/giiaa-hist_204k_base-inceptionresnetv2_loss-0.078.hdf5"
+GCIAA_CATEGORIES_MODEL = "../../models/gciaa-cat_81k_base-giiaa_accuracy-0.710.hdf5"
+GCIAA_DISTORTIONS_MODEL = "../../models/gciaa-dist_51k_base-giiaa_accuracy-0.906.hdf5"
+PCIAA_HORSES_MODEL = "../../models/pciaa_horses_90k-pairs_accuracy-0.951.hdf5"
 
 AVA_DATASET_TEST_PATH = "../../data/ava/dataset/test"
 AVA_DATAFRAME_TEST_PATH = "../../data/ava/giiaa_metadata/dataframe_AVA_giiaa-hist_test.csv"
-
-BASE_MODEL_NAME = "InceptionResNetV2"
 
 
 def get_mean(distribution):
@@ -34,7 +32,7 @@ if __name__ == "__main__":
 
     giiaa = keras.models.load_model(GIIAA_MODEL, custom_objects={"earth_movers_distance": earth_movers_distance})
 
-    gciaa = BaseModule(weights=GCIAA_MODEL)
+    gciaa = BaseModule(weights=GCIAA_CATEGORIES_MODEL, load_weights_as='GCIAA')
     gciaa.build()
     gciaa.compile()
 

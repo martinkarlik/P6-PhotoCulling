@@ -1,5 +1,5 @@
 """
-Script to programmatically split the dataset into train and test sets.
+Script to programmatically split the AVA dataset into a train and a test set.
 We are using a fixed seed value to make the procedure reproducible.
 """
 
@@ -9,23 +9,24 @@ import os
 import PIL.Image
 import tqdm
 
-DATASET_PATH = "../../iaa/ava/images"
+DATASET_PATH = "Path to your folder with the original AVA dataset."
 OUTPUT_DIRECTORY_PATH = "../../data/ava"
 
 SEED = 420
 TRAIN_TEST_SPLIT = 0.8
 
 
-def generate_train_test(dataset_path, output_path, seed):
+def generate_train_test(dataset_path, output_path, train_test_split=TRAIN_TEST_SPLIT, seed=SEED):
 
     filenames = os.listdir(dataset_path)
     filenames = [os.path.join(dataset_path, f) for f in filenames if f.endswith('.jpg')]
 
     random.seed(seed)
+
     filenames.sort()
     random.shuffle(filenames)
 
-    split = int(TRAIN_TEST_SPLIT * len(filenames))
+    split = int(train_test_split * len(filenames))
     train_filenames = filenames[:split]
     test_filenames = filenames[split:]
 
@@ -59,4 +60,4 @@ def generate_train_test(dataset_path, output_path, seed):
 
 
 if __name__ == "__main__":
-    generate_train_test(DATASET_PATH, OUTPUT_DIRECTORY_PATH, SEED)
+    generate_train_test(DATASET_PATH, OUTPUT_DIRECTORY_PATH)

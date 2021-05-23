@@ -1,5 +1,9 @@
 """
-Training script for distribution-based GCIAA.
+Training script for within-category-based GCIAA.
+This script is based on generating pairs of images from the AVA dataset, which belong to the same AVA categories (or tags).
+There are 66 tags in the AVA dataset, and each image is assigned up to two of these tags. We chose 15 out of these categories,
+which seemed to contain the most similar images (e.g. tag "Animal" was chosen over "Macro" or "Abstract").
+The images' mean aesthetics score was used to determine which of the two images is more aesthetic.
 """
 
 from iaa.src.gciaa.base_module_gciaa import *
@@ -11,17 +15,14 @@ from tensorflow.keras import backend as K
 import pandas as pd
 import os
 
-FULL_DATASET_TRAINING = True
-
 
 AVA_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-cat_train.csv"
-AVA_DATAFRAME_SUBSET_PATH = "../../data/ava/gciaa_metadata/AVA_gciaa-cat_subset_dataframe.csv"
+GIIAA_MODEL = "../../models/giiaa-hist_204k_base-inceptionresnetv2_loss-0.078.hdf5"
 
-GIIAA_MODEL = "../../models/giiaa_metadata/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
-LOG_PATH = "../../data/ava/gciaa_metadata/logs"
-MODELS_PATH = "../../models/gciaa/"
+LOG_PATH = "../../data/ava/gciaa_metadata/gciaa-cat_logs"
+MODELS_PATH = "../../models/"
+MODEL_NAME_TAG = "gciaa-cat_81k_base-giiaa"
 
-BASE_MODEL_NAME = "InceptionResNetV2"
 BATCH_SIZE = 96
 DROPOUT_RATE = 0.75
 USE_MULTIPROCESSING = False
@@ -31,18 +32,12 @@ EPOCHS = 5
 
 
 if __name__ == "__main__":
-    if FULL_DATASET_TRAINING:
-        dataframe_path = AVA_DATAFRAME_PATH
-        model_name_tag = 'model_gciaa-cat_all_'
-    else:
-        dataframe_path = AVA_DATAFRAME_SUBSET_PATH
-        model_name_tag = 'model_gciaa-cat_'
 
     tensorboard = TensorBoard(
         log_dir=LOG_PATH, update_freq='batch'
     )
 
-    model_save_name = (model_name_tag + BASE_MODEL_NAME.lower() + '_{accuracy:.3f}.hdf5')
+    model_save_name = (MODEL_NAME_TAG + '_accuracy-{accuracy:.3f}.hdf5')
     model_file_path = os.path.join(MODELS_PATH, model_save_name)
     model_checkpointer = ModelCheckpoint(
         filepath=model_file_path,
@@ -52,14 +47,12 @@ if __name__ == "__main__":
         save_weights_only=True,
     )
 
-    base = BaseModule(
-        base_model_name=BASE_MODEL_NAME,
-        weights=GIIAA_MODEL)
+    base = BaseModule(weights=GIIAA_MODEL, load_weights_as='GIIAA')
     base.build()
     base.compile()
 
     # Training the GCIAA model with same-category pairs generated from the AVA dataset.
-    dataframe = pd.read_csv(dataframe_path, converters={'label': eval})
+    dataframe = pd.read_csv(AVA_DATAFRAME_PATH, converters={'label': eval})
 
     data_generator = ImageDataGenerator(
         rescale=1.0 / 255,
