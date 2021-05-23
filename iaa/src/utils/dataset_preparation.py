@@ -3,7 +3,6 @@ Script to programmatically split the AVA dataset into a train and a test set.
 We are using a fixed seed value to make the procedure reproducible.
 """
 
-
 import random
 import os
 import PIL.Image

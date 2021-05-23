@@ -39,7 +39,6 @@ Loss:           0.4211      |   0.1981
 Accuracy:       0.8472      |   0.8593
 """
 
-
 from iaa.src.gciaa.base_module_gciaa import *
 from iaa.src.utils.generators import *
 import pandas as pd

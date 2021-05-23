@@ -4,10 +4,9 @@ Evaluated on 61 894 out of 155 532 within-cluster pairs of images of horses,
 generated from a private dataset of a professional photographer.
 
                 Baseline    |   GCIAA Categories    |   GCIAA Distortions   |   PCIAA
-Loss:           0.4720      |   0.0000              |   0.4643              |   0.1070
-Accuracy:       0.7290      |   0.0000              |   0.5461              |   0.9086
+Loss:           0.4720      |   0.4495              |   0.4643              |   0.1070
+Accuracy:       0.7290      |   0.6907              |   0.5461              |   0.9086
 """
-
 
 from iaa.src.gciaa.base_module_gciaa import *
 from iaa.src.utils.generators import *

@@ -8,9 +8,7 @@ from tqdm import tqdm
 import cv2
 import os
 import random
-from scipy.stats import wasserstein_distance
 from iaa.src.giiaa.base_module_giiaa import *
-import tensorflow.keras as keras
 
 
 MODEL_PATH = "../../models/giiaa-hist_204k_base-inceptionresnetv2_loss-0.078.hdf5"

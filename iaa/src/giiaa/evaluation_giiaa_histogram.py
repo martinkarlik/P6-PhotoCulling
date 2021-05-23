@@ -5,7 +5,6 @@ Evaluation of the GIIAA model.
 
 from iaa.src.giiaa.base_module_giiaa import *
 import pandas as pd
-import tensorflow.keras as keras
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
