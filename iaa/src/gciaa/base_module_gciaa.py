@@ -1,3 +1,12 @@
+"""
+This script provides the base module for the Comparative IAA model.
+The pipeline of the network is:
+    two images -> image encoder -> image encodings -> mapping to a binary output -> index of the better image.
+As the image encoder, we are using the trained GIIAA model. The inputs-image encoder relationship follows
+the typical Siamese model. However, the mapping function is custom: The image encoding is the GIIAA histogram output,
+so we compute the mean value of this histogram, subtract the two mean values of the two images' encodings' and pass it
+into a sigmoid function. The output can than be rounded to get the index of the preferred image.
+"""
 
 import importlib
 import numpy as np

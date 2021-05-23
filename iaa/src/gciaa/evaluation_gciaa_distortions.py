@@ -35,10 +35,9 @@ Accuracy:       0.7190      |   0.9036
 ----------------------------------------------------------
 
 ALL DISTORTIONS Baseline    |   Distortion trained GCIAA
-Loss:           0.4211      |   avg
-Accuracy:       0.8472      |   avg
+Loss:           0.4211      |   0.1981
+Accuracy:       0.8472      |   0.8593
 """
-
 
 from iaa.src.gciaa.base_module_gciaa import *
 from iaa.src.utils.generators import *
@@ -46,7 +45,7 @@ import pandas as pd
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
-GIIAA_MODEL = "../../models/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
+GIIAA_MODEL = "../../models/giiaa-hist_204k_base-inceptionresnetv2_loss-0.078.hdf5"
 GCIAA_DISTORTIONS_MODEL = "../../models/gciaa-dist_51k_base-giiaa_accuracy-0.906.hdf5"
 
 AVA_DATAFRAME_TEST_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-dist_test.csv"
@@ -67,7 +66,7 @@ DISTORTION_GENERATORS = [
 
 if __name__ == "__main__":
 
-    base = BaseModule(weights=GCIAA_DISTORTIONS_MODEL)
+    base = BaseModule(weights=GCIAA_DISTORTIONS_MODEL, load_weights_as='GCIAA')
     base.build()
     base.compile()
 

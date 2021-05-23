@@ -8,12 +8,10 @@ from tqdm import tqdm
 import cv2
 import os
 import random
-from scipy.stats import wasserstein_distance
 from iaa.src.giiaa.base_module_giiaa import *
-import tensorflow.keras as keras
 
 
-MODEL_PATH = "../../models/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
+MODEL_PATH = "../../models/giiaa-hist_204k_base-inceptionresnetv2_loss-0.078.hdf5"
 
 AVA_DATASET_TEST_PATH = "../../data/ava/dataset/test/"
 AVA_DATAFRAME_TEST_PATH = "../../data/ava/giiaa_metadata/dataframe_AVA_giiaa-hist_test.csv"
@@ -29,13 +27,10 @@ def get_mean(distribution):
 
 if __name__ == "__main__":
 
-    # model = keras.models.load_model(MODEL_PATH, custom_objects={"earth_movers_distance": earth_movers_distance})
-
     nima = NimaModule()
     nima.build()
     nima.nima_model.load_weights(MODEL_PATH)
-    model = nima.nima_model
-    model.compile()
+    nima.nima_model.compile()
 
     dataframe = pd.read_csv(AVA_DATAFRAME_TEST_PATH, converters={'label': eval})
 
@@ -55,7 +50,7 @@ if __name__ == "__main__":
             image = np.asarray(image)[np.newaxis, ...]
 
             gt = dataframe[dataframe["id"] == random_file.split('/')[-1]].iloc[0]['label']
-            prediction = model.predict(image)[0]
+            prediction = nima.nima_model.predict(image)[0]
 
             predictions.append(get_mean(prediction))
             gts.append(get_mean(gt))

@@ -1,5 +1,7 @@
 """
-NIMA-specific classes and utils.
+The implementation of this script follows the paper NIMA from Google,
+apart from implementing random crop to preprocess the image inputs.
+Our implementation uses InceptionResNetV2 as the base model.
 """
 
 import importlib

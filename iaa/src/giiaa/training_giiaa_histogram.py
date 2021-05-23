@@ -1,5 +1,5 @@
 """
-Training script for distribution-based GIIAA.
+Training script for distribution-based GIIAA, based on the NIMA paper from Google.
 """
 
 from iaa.src.giiaa.base_module_giiaa import *

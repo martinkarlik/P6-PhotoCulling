@@ -2,14 +2,16 @@
 Training script for mean-based GIIAA. Since the training dataset is large, and thus should not be loaded all at once
 into RAM, the training process is such that the data flows from a dataframe using keras' ImageDataGenerator.
 As this is a regression problem, the labels are normalized average ranks of aesthetic quality of corresponding images.
+
+This script is not a part of the overall Comparative IAA pipeline.
 """
 
-from iaa.src.utils.dataframe_preparation import *
 import tensorflow as tf
+import pandas as pd
 
 
 AVA_DATAFRAME_PATH = "../../iaa/ava/AVA_mean_dataframe.csv"
-MODEL_PATH = "../../iaa/models/model_AVAsubset_val_loss-0.0037.h5"
+MODEL_PATH = "../../models/model_AVAsubset_val_loss-0.0037.h5"
 
 EPOCHS = 10
 BATCH_SIZE = 32

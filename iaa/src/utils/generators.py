@@ -1,3 +1,10 @@
+"""
+The huge amount of data requires us to use data generators to feed images into the NN.
+This can be handled with the keras' ImageDataGenerator class alone, but to generate
+pairs of images for the GCIAA-categories and GCIAA-distortions, we need to create
+our own Generator classes.
+"""
+
 import random
 import numpy as np
 import cv2

@@ -1,5 +1,7 @@
 """
 Training script for distribution-based GCIAA.
+We are using 7 types of distortions: underexposure, overexposure, zooming, shearing, rotation, blur, blob overlay.
+To generate the image pairs, we are using a custom generator defined in utils/generators.py file.
 """
 
 from iaa.src.gciaa.base_module_gciaa import *
@@ -14,7 +16,7 @@ import os
 
 AVA_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-dist_train.csv"
 
-GIIAA_MODEL = "../../models/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
+GIIAA_MODEL = "../../models/giiaa-hist_204k_base-inceptionresnetv2_loss-0.078.hdf5"
 GCIAA_DISTORTIONS_MODEL = "../../models/gciaa-dist_51k_base-giiaa_accuracy-0.865.hdf5"
 
 MODELS_PATH = "../../models"
