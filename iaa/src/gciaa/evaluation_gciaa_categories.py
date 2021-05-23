@@ -1,12 +1,12 @@
 """
 Evaluation of within-category trained GCIAA model.
-Evaluated on 20 231 within-category generated pairs from AVA dataset.
+Evaluated on 20 233 within-category generated pairs from AVA dataset.
 Performance of the within-category trained GCIAA model is compared
 with the baseline GCIAA model with the GIIAA model as the image encoder.
 
-                Baseline    |   Within-category trained GCIAA
-Loss:           0.4274      |   0.0000
-Accuracy:       0.6751      |   0.0000
+                Baseline    |   GCIAA Categories
+Loss:           0.4274      |   0.3328
+Accuracy:       0.6751      |   0.6852
 """
 
 from iaa.src.gciaa.base_module_gciaa import *
@@ -14,8 +14,8 @@ from iaa.src.utils.generators import *
 import pandas as pd
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-GIIAA_MODEL = "../../models/giiaa_metadata/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
-GCIAA_CATEGORIES_MODEL = ""  # Should be the saved GCIAA weights
+GIIAA_MODEL = "../../models/giiaa-hist_204k_base-inceptionresnetv2_loss-0.078.hdf5"
+GCIAA_CATEGORIES_MODEL = "../../models/gciaa-cat_81k_base-giiaa_accuracy-0.710.hdf5"
 
 AVA_DATASET_TEST_PATH = "../../data/ava/dataset/test/"
 AVA_DATAFRAME_TEST_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-cat_test.csv"

@@ -1,5 +1,7 @@
 """
-Training script for distribution-based GCIAA.
+Training script for the Personalized IAA training.
+Due to having quite a lot of horse image pairs, we didn't implement any few-shot approach,
+only took the original comparative network and retrained it with horse image pairs.
 """
 
 from iaa.src.gciaa.base_module_gciaa import *
@@ -14,10 +16,10 @@ import os
 
 HORSES_DATAFRAME_PATH = "../../data/horses/pciaa_metadata/dataframe_horses_pciaa_train.csv"
 
-GIIAA_MODEL = "../../models/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
+GIIAA_MODEL = "../../models/giiaa-hist_204k_base-inceptionresnetv2_loss-0.078.hdf5"
 GCIAA_MODEL = ""
 
-LOG_PATH = "../../data/ava/gciaa_metadata/logs"
+LOG_PATH = "../../data/horses/pciaa_metadata/pciaa_logs"
 MODELS_PATH = "../../models/"
 MODEL_NAME_TAG = "pciaa_horses_90k-pairs"
 

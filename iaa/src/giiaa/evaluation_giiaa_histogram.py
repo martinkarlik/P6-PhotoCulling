@@ -1,15 +1,14 @@
 """
-Script to perform proper evaluation on the test set.
+Evaluation of the GIIAA model.
 """
 
 
 from iaa.src.giiaa.base_module_giiaa import *
 import pandas as pd
-import tensorflow.keras as keras
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
-MODEL_PATH = "../../models/giiaa-hist_200k_base-inceptionresnetv2_loss-0.078.hdf5"
+MODEL_PATH = "../../models/giiaa-hist_204k_base-inceptionresnetv2_loss-0.078.hdf5"
 
 AVA_DATASET_TEST_PATH = "../../data/ava/dataset/test/"
 AVA_DATAFRAME_TEST_PATH = "../../data/ava/giiaa_metadata/dataframe_AVA_giiaa-hist_test.csv"
@@ -27,8 +26,6 @@ def get_mean(distribution):
 
 
 if __name__ == "__main__":
-
-    # model = keras.models.load_model(MODEL_PATH, custom_objects={"earth_movers_distance": earth_movers_distance})
 
     nima = NimaModule()
     nima.build()

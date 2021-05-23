@@ -1,7 +1,13 @@
 """
-Prepares a task-specific dataframe from AVA.txt, i.e. transforms all the AVA.txt information into
-a dataframe of two columns: image filename (for data generator to access it dynamically) and a label
-(either normalized mean-value of ranks, or distribution of ranks).
+This scripts provides an API to prepare all the possible dataframes for the different training scripts.
+In case of the scripts using AVA dataset, the dataframes are constructed from the AVA.txt file.
+As for the dataset of horses, the images are first clustered based on their time data, and then pairs are generated
+from within these clusters, always pairing the few approved images with all the different rejected images.
+All dataframes are saved as .csv files, and can be found in the _metadata folders inside either
+iaa/data/ava or iaa/data/horses.
+
+These dataframes were prepared on a Windows computer, but due to different filename formatting on Linux and Mac,
+all of these dataframes should be recreated on these operating systems.
 """
 
 import os
@@ -21,7 +27,7 @@ HORSES_DATASET_APPROVED_PATH = "../../data/horses/dataset/approved/"
 HORSES_DATASET_REJECTED_PATH = "../../data/horses/dataset/rejected/"
 
 SELECTED_CATEGORIES_FOR_GCIAA_CAT_TRAINING = (19, 20, 43, 57, 21, 50, 2, 4, 38, 14, 15, 47, 7, 42, 26)
-RANDOM_SEED = 31
+SEED = 31
 
 
 DATAFRAME_AVA_GIIAA_HIST_TRAIN_PATH = "../../data/ava/giiaa_metadata/dataframe_AVA_giiaa-hist_train.csv"
@@ -48,12 +54,12 @@ def prepare_dataframe_giiaa_mean(image_dataset_path, image_info_path):
     }
 
     count = 0
-    count_failed = 0
 
+    # Loop through image directory and get the row from AVA.txt dataframe where the index
+    # (in dataframe) equals filename minus .jpg.
     for filename in os.listdir(image_dataset_path):
 
-        # Loop through image directory and get the row from AVA.txt dataframe where the index
-        # (in dataframe) equals filename minus .jpg.
+
 
         file_index = filename.split('.')[0]
 
@@ -61,13 +67,11 @@ def prepare_dataframe_giiaa_mean(image_dataset_path, image_info_path):
             image_data = original_dataframe[original_dataframe["index"] == int(file_index)].iloc[0]
         else:
             print("Non-digit file name: {}".format(file_index))
-            count_failed += 1
             continue
 
         count += 1
 
-        # Get the average of ranks for now (although literature suggests to use different metrics).
-
+        # Get the average of ranks for now (although literature suggests to use different metrics - e.g. histograms).
         num_annotations = 0
         rank_sum = 0
 
@@ -79,11 +83,6 @@ def prepare_dataframe_giiaa_mean(image_dataset_path, image_info_path):
 
         data["id"].append(filename)
         data["label"].append(average_rank / 10)
-
-        if count % 500 == 0:
-            print("Count: {}".format(count))
-
-    print("{} indices were not found in the image dataset.".format(count_failed))
 
     return pd.DataFrame(data)
 
@@ -97,12 +96,9 @@ def prepare_dataframe_giiaa_hist(image_dataset_path, image_info_path):
         'label': []
     }
 
-    count_failed = 0
-
+    # Loop through image directory and get the row from AVA.txt dataframe where the index
+    # (in dataframe) equals filename minus .jpg.
     for filename in tqdm(os.listdir(image_dataset_path)):
-
-        # Loop through image directory and get the row from AVA.txt dataframe where the index
-        # (in dataframe) equals filename minus .jpg.
 
         file_index = filename.split('.')[0]
 
@@ -110,7 +106,6 @@ def prepare_dataframe_giiaa_hist(image_dataset_path, image_info_path):
             image_data = original_dataframe[original_dataframe['index'] == int(file_index)].iloc[0]
         else:
             print("Non-digit file name: {}".format(file_index))
-            count_failed += 1
             continue
 
         # Get the histogram distribution of annotated scores as a list.
@@ -126,8 +121,6 @@ def prepare_dataframe_giiaa_hist(image_dataset_path, image_info_path):
         data['id'].append(os.path.join(image_dataset_path, filename))
         data['label'].append(score_distribution)
 
-    print("{} indices were not found in the image dataset.".format(count_failed))
-
     return pd.DataFrame(data)
 
 
@@ -137,16 +130,18 @@ def prepare_dataframe_gciaa_cat(
         selected_categories=SELECTED_CATEGORIES_FOR_GCIAA_CAT_TRAINING,
         pairs_per_category_scalar=0.7):
 
-    np.random.seed(RANDOM_SEED)
+    np.random.seed(SEED)
 
     original_dataframe = pd.read_csv(image_info_path, sep=' ')
 
+    # Get only the file indices from either the train or the test folder.
     relevant_file_indices = []
     for filename in os.listdir(image_dataset_path):
         image_index = filename.split('.')[0]
         if image_index.isdigit():
             relevant_file_indices.append(image_index)
 
+    # Get only the file indices containing at least one category tag.
     filtered_dataframe = original_dataframe.loc[original_dataframe['index'].isin(relevant_file_indices)
                                                 & ((original_dataframe['tag1'] > 0) | (original_dataframe['tag2'] > 0))]
 
@@ -194,13 +189,15 @@ def prepare_dataframe_gciaa_dist(
         image_dataset_path,
         pairs_per_dataset_scalar=0.25):
 
+    np.random.seed(SEED)
+
     data = {
         'id': [],
         'label': []
     }
 
     filenames = os.listdir(image_dataset_path)
-    random.Random(RANDOM_SEED).shuffle(filenames)
+    random.shuffle(filenames)
 
     for filename in tqdm(filenames[:int(len(filenames) * pairs_per_dataset_scalar)]):
 
@@ -246,7 +243,7 @@ def prepare_dataframe_pciaa_clusters(image_dataset_approved_path, image_dataset_
 
 def prepare_dataframe_pciaa_pairs(cluster_dataframe_path):
 
-    np.random.seed(RANDOM_SEED)
+    np.random.seed(SEED)
 
     cluster_dataframe = pd.read_csv(cluster_dataframe_path)
 
@@ -256,6 +253,7 @@ def prepare_dataframe_pciaa_pairs(cluster_dataframe_path):
         'label': []
     }
 
+    # Generate pairs of images from within the clusters.
     num_clusters = cluster_dataframe["cluster"].max()
     for i in tqdm(range(0, int(num_clusters))):
         current_cluster_dataframe = cluster_dataframe.loc[cluster_dataframe['cluster'] == i]
@@ -283,7 +281,7 @@ def prepare_dataframe_pciaa_pairs(cluster_dataframe_path):
 def split_dataframe_test_train(pairs_dataframe_path, test_split=0.4):
     pairs_dataframe = pd.read_csv(pairs_dataframe_path, index_col=0)
 
-    np.random.seed(RANDOM_SEED)
+    np.random.seed(SEED)
     mask = np.random.rand(len(pairs_dataframe)) < test_split
 
     train_split = pairs_dataframe[~mask]
@@ -293,6 +291,6 @@ def split_dataframe_test_train(pairs_dataframe_path, test_split=0.4):
 
 
 if __name__ == "__main__":
-    dataframe_train, dataframe_test = split_dataframe_test_train(PCIAA_PAIRS_PATH)
-    dataframe_train.to_csv(PCIAA_TRAIN_DATAFRAME_PATH)
-    dataframe_test.to_csv(PCIAA_TEST_DATAFRAME_PATH)
+    dataframe_train, dataframe_test = split_dataframe_test_train(DATAFRAME_HORSES_PAIRS_PATH)
+    dataframe_train.to_csv(DATAFRAME_HORSES_PCIAA_TRAIN_PATH)
+    dataframe_test.to_csv(DATAFRAME_HORSES_PCIAA_TEST_PATH)
