@@ -13,4 +13,5 @@ iaa/src/giiaa/__pycache__
 iaa/src/gciaa/__pycache__
 iaa/src/pciaa/__pycache__
 iaa/src/utils/__pycache__
+.DS_Store
 
