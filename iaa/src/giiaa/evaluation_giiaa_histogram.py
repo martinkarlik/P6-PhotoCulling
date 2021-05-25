@@ -1,5 +1,8 @@
 """
 Evaluation of the GIIAA model.
+Evaluated on 51 100 images from AVA dataset.
+
+Earth mover's distance loss: 0.0772
 """
 
 
@@ -8,36 +11,24 @@ import pandas as pd
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
-MODEL_PATH = "../../models/giiaa-hist_204k_base-inceptionresnetv2_loss-0.078.hdf5"
-
-AVA_DATASET_TEST_PATH = "../../data/ava/dataset/test/"
+GIIAA_PATH = "../../models/giiaa-hist_204k_base-inceptionresnetv2_loss-0.078.hdf5"
+AVA_DATASET_TEST_PATH = "../../data/ava/dataset/test"
 AVA_DATAFRAME_TEST_PATH = "../../data/ava/giiaa_metadata/dataframe_AVA_giiaa-hist_test.csv"
 
-BATCH_SIZE = 32
-
-
-def get_mean(distribution):
-
-    mean = 0.0
-    for i in range(0, len(distribution)):
-        mean += distribution[i] * (i + 1)
-
-    return mean
+BATCH_SIZE = 1
 
 
 if __name__ == "__main__":
 
     nima = NimaModule()
     nima.build()
-    nima.nima_model.load_weights(MODEL_PATH)
-    nima.nima_model.compile()
+    nima.nima_model.load_weights(GIIAA_PATH)
+    nima.compile()
 
     dataframe = pd.read_csv(AVA_DATAFRAME_TEST_PATH, converters={'label': eval})
-
     data_generator = ImageDataGenerator(rescale=1.0 / 255)
 
     test_generator = data_generator.flow_from_dataframe(
-        directory=AVA_DATASET_TEST_PATH,
         dataframe=dataframe,
         x_col='id',
         y_col=['label'],
@@ -45,7 +36,7 @@ if __name__ == "__main__":
         target_size=(224, 224),
         color_mode='rgb',
         batch_size=BATCH_SIZE,
-        shuffle=False
+        subset='training'
     )
 
     nima.nima_model.evaluate_generator(
@@ -53,4 +44,5 @@ if __name__ == "__main__":
         steps=test_generator.samples / test_generator.batch_size,
         verbose=1
     )
+
 

@@ -59,9 +59,7 @@ class NimaModule:
 
     def compile(self):
         self.nima_model.compile(
-            optimizer=Adam(lr=self.learning_rate, decay=self.decay),
-            loss=self.loss,
-            metrics=['earth_movers_distance'])
+            optimizer=Adam(lr=self.learning_rate, decay=self.decay), loss=self.loss)
 
     def preprocess(self):
         return self.base_module.preprocess_input

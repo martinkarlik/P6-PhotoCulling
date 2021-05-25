@@ -10,14 +10,13 @@ import pandas as pd
 import os
 
 
-AVA_DATASET_PATH = "../../data/ava/dataset/train"
 AVA_DATAFRAME_PATH = "../../data/ava/giiaa_metadata/dataframe_AVA_giiaa-hist_train.csv"
 
 LOG_PATH = "../../data/ava/giiaa_metadata/giiaa-hist_logs"
 MODELS_PATH = "../../models/giiaa/"
-
-
+MODEL_NAME_TAG = 'giiaa-hist_200k_base-'
 BASE_MODEL_NAME = "InceptionResNetV2"
+
 N_CLASSES = 10
 BATCH_SIZE = 96
 DROPOUT_RATE = 0.75
@@ -35,10 +34,7 @@ DECAY_ALL = 0.000023
 
 if __name__ == "__main__":
 
-    MODEL_NAME_TAG = 'giiaa-hist_200k_base-'
-
-    base_model_name = BASE_MODEL_NAME
-    nima = NimaModule(base_model_name, N_CLASSES, LEARNING_RATE_DENSE, DECAY_DENSE, DROPOUT_RATE)
+    nima = NimaModule(BASE_MODEL_NAME, N_CLASSES, LEARNING_RATE_DENSE, DECAY_DENSE, DROPOUT_RATE)
     nima.build()
 
     dataframe = pd.read_csv(AVA_DATAFRAME_PATH, converters={'label': eval})
@@ -74,7 +70,7 @@ if __name__ == "__main__":
         log_dir=LOG_PATH, update_freq='batch'
     )
 
-    model_save_name = (MODEL_NAME_TAG + base_model_name.lower() + '_{val_loss:.3f}.hdf5')
+    model_save_name = (MODEL_NAME_TAG + BASE_MODEL_NAME.lower() + '_{val_loss:.3f}.hdf5')
     model_file_path = os.path.join(MODELS_PATH, model_save_name)
     model_checkpointer = ModelCheckpoint(
         filepath=model_file_path,

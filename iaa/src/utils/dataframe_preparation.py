@@ -291,6 +291,5 @@ def split_dataframe_test_train(pairs_dataframe_path, test_split=0.4):
 
 
 if __name__ == "__main__":
-    dataframe_train, dataframe_test = split_dataframe_test_train(DATAFRAME_HORSES_PAIRS_PATH)
-    dataframe_train.to_csv(DATAFRAME_HORSES_PCIAA_TRAIN_PATH)
-    dataframe_test.to_csv(DATAFRAME_HORSES_PCIAA_TEST_PATH)
+    dataframe = prepare_dataframe_giiaa_hist(AVA_DATASET_TEST_PATH, AVA_TEXT_PATH)
+    dataframe.to_csv(DATAFRAME_AVA_GIIAA_HIST_TEST_PATH)
