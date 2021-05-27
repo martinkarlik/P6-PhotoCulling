@@ -17,7 +17,7 @@ import os
 AVA_DATAFRAME_PATH = "../../data/ava/gciaa_metadata/dataframe_AVA_gciaa-dist_train.csv"
 
 GIIAA_MODEL = "../../models/giiaa-hist_204k_base-inceptionresnetv2_loss-0.078.hdf5"
-GCIAA_DISTORTIONS_MODEL = "../../models/gciaa-dist_51k_base-giiaa_accuracy-0.865.hdf5"
+GCIAA_DISTORTIONS_MODEL = "../../models/gciaa-dist_51k_base-giiaa_accuracy-0.906.hdf5"
 
 MODELS_PATH = "../../models"
 MODEL_NAME_TAG = 'gciaa-dist_51k_base-giiaa'
@@ -49,7 +49,7 @@ if __name__ == "__main__":
         save_weights_only=True,
     )
 
-    base = BaseModule(weights=GCIAA_DISTORTIONS_MODEL)
+    base = BaseModule(weights=GCIAA_DISTORTIONS_MODEL, load_weights_as='GCIAA')
     base.build()
     base.compile()
 

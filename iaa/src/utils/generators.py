@@ -114,7 +114,7 @@ class SiameseGeneratorDistortions:
         while True:
 
             (image_batch_a, label_batch) = self.flow_original.next()
-            (image_batch_b, _) = random.choice(self.flow_distortions).next()
+            (image_batch_b, _) = self.flow_distortions[self.distortion_type].next()
 
             seed = [float(random.random() < 0.5) for _ in range(len(label_batch))]
 
@@ -130,8 +130,6 @@ class SiameseGeneratorDistortions:
                 shuffled_image_batch_a.append(image_a)
                 shuffled_image_batch_b.append(image_b)
                 shuffled_label_batch.append(seed[i])
-
-            cv2.waitKey()
 
             shuffled_image_batch_a = np.asarray(shuffled_image_batch_a)
             shuffled_image_batch_b = np.asarray(shuffled_image_batch_b)
