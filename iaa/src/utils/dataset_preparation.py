@@ -11,7 +11,7 @@ import tqdm
 DATASET_PATH = "Path to your folder with the original AVA dataset."
 OUTPUT_DIRECTORY_PATH = "../../data/ava"
 
-SEED = 420
+SEED = 91
 TRAIN_TEST_SPLIT = 0.8
 
 
