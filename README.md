@@ -10,6 +10,11 @@ We divide the methods for Image Aesthetics Assessment (IAA) into Generic vs Pers
 
 The Personalized Comparative IAA model is deployed on a website, the interaction of which was designed together with professional photographers.
 
+<div style="display:inline-block">
+  <img src=mainView.PNG height="700" alt="Main view" float="left">
+  <img src=fullscreenView.PNG height="700" alt="Fullscreen view" float="right"> 
+</div>
+
 
 
 
